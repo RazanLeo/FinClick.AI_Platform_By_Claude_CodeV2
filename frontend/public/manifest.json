@@ -1,0 +1,78 @@
+{
+  "short_name": "FinClick.AI",
+  "name": "FinClick.AI - منصة التحليل المالي الذكية",
+  "description": "منصة SaaS متقدمة للتحليل المالي بالذكاء الاصطناعي - 180 تحليل مالي، 23 وكيل ذكي",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#B48500",
+  "background_color": "#000000",
+  "categories": ["finance", "business", "productivity"],
+  "lang": "ar",
+  "dir": "rtl",
+  "scope": "/",
+  "screenshots": [
+    {
+      "src": "screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshot-narrow.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "لوحة التحكم",
+      "short_name": "Dashboard",
+      "description": "الوصول السريع للوحة التحكم",
+      "url": "/dashboard",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "التحليل السريع",
+      "short_name": "Quick Analysis",
+      "description": "بدء تحليل مالي سريع",
+      "url": "/dashboard?action=quick-analysis",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "الأسعار",
+      "short_name": "Pricing",
+      "description": "عرض خطط الاشتراك",
+      "url": "/pricing",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "web",
+      "url": "https://finclick-ai-platform.vercel.app"
+    }
+  ],
+  "prefer_related_applications": false,
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7"
+}

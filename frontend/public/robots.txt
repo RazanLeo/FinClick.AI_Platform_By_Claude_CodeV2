@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://finclick-ai-platform.vercel.app/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin
+Disallow: /api
+Disallow: /dashboard/private
+Disallow: /*.json$
+
+# Allow specific important pages
+Allow: /
+Allow: /pricing
+Allow: /features
+Allow: /about
+Allow: /contact
+Allow: /ar
+Allow: /en
+
+# Crawl delay
+Crawl-delay: 1
