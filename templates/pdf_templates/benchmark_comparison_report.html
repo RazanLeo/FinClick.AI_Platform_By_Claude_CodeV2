@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير المقارنات المعيارية - FinClick.AI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 3px solid #059669;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #059669, #10b981);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .company-info h1 {
+            color: #059669;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .company-info p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .report-meta {
+            text-align: left;
+            direction: ltr;
+        }
+
+        .report-meta h2 {
+            color: #059669;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .report-meta .date {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Benchmark Overview */
+        .benchmark-overview {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-right: 4px solid #059669;
+        }
+
+        .benchmark-overview h3 {
+            color: #059669;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .benchmark-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .summary-stat {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #bbf7d0;
+        }
+
+        .summary-stat .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #059669;
+            margin-bottom: 5px;
+        }
+
+        .summary-stat .label {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* Performance Comparison */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #059669;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dcfce7;
+        }
+
+        /* Comparison Cards */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .comparison-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 3px solid #059669;
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .metric-name {
+            color: #059669;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .industry-avg {
+            background: #f3f4f6;
+            color: #64748b;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .comparison-bars {
+            margin-bottom: 15px;
+        }
+
+        .comparison-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .bar-label {
+            min-width: 80px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 20px;
+            background: #f3f4f6;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .our-performance {
+            background: linear-gradient(90deg, #059669, #10b981);
+        }
+
+        .industry-performance {
+            background: linear-gradient(90deg, #64748b, #94a3b8);
+        }
+
+        .competitor-performance {
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+        }
+
+        .bar-value {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .performance-status {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-excellent {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-good {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .status-average {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .status-poor {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Detailed Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .comparison-table thead {
+            background: #059669;
+            color: white;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #dcfce7;
+        }
+
+        .comparison-table th {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: #f0fdf4;
+        }
+
+        .comparison-table .our-value {
+            font-weight: 700;
+            color: #059669;
+        }
+
+        .comparison-table .industry-value {
+            color: #64748b;
+        }
+
+        .comparison-table .competitor-value {
+            color: #dc2626;
+        }
+
+        /* Ranking Section */
+        .ranking-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .ranking-title {
+            color: #059669;
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .ranking-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-right: 3px solid #e5e7eb;
+        }
+
+        .ranking-item.our-rank {
+            background: #f0fdf4;
+            border-right-color: #059669;
+        }
+
+        .rank-number {
+            width: 30px;
+            height: 30px;
+            background: #64748b;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-left: 15px;
+        }
+
+        .our-rank .rank-number {
+            background: #059669;
+        }
+
+        .rank-company {
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .rank-score {
+            color: #059669;
+            font-weight: 700;
+        }
+
+        /* Trend Analysis */
+        .trend-analysis {
+            background: #fffbeb;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-right: 4px solid #f59e0b;
+        }
+
+        .trend-analysis h4 {
+            color: #f59e0b;
+            margin-bottom: 20px;
+        }
+
+        .trend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .trend-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 3px solid #f59e0b;
+        }
+
+        .trend-item h5 {
+            color: #f59e0b;
+            margin-bottom: 8px;
+        }
+
+        .trend-direction {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .trend-up {
+            color: #16a34a;
+        }
+
+        .trend-down {
+            color: #dc2626;
+        }
+
+        .trend-stable {
+            color: #f59e0b;
+        }
+
+        /* Performance Radar */
+        .radar-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .radar-title {
+            color: #059669;
+            margin-bottom: 20px;
+        }
+
+        .radar-placeholder {
+            background: white;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        /* Gap Analysis */
+        .gap-analysis {
+            background: #fef2f2;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-right: 4px solid #dc2626;
+        }
+
+        .gap-analysis h4 {
+            color: #dc2626;
+            margin-bottom: 20px;
+        }
+
+        .gap-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-right: 3px solid #dc2626;
+        }
+
+        .gap-metric {
+            color: #dc2626;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .gap-value {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* Improvement Recommendations */
+        .improvement-recommendations {
+            background: #f0f9ff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-right: 4px solid #0ea5e9;
+        }
+
+        .improvement-recommendations h4 {
+            color: #0ea5e9;
+            margin-bottom: 20px;
+        }
+
+        .recommendation-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-right: 3px solid #0ea5e9;
+        }
+
+        .recommendation-card h5 {
+            color: #0ea5e9;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-impact {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .impact-high {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .impact-medium {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .impact-low {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 2px solid #dcfce7;
+            padding-top: 20px;
+            margin-top: 40px;
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        /* Page break for PDF */
+        .page-break {
+            page-break-before: always;
+        }
+
+        @media print {
+            .container {
+                max-width: none;
+                margin: 0;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo">FC</div>
+                <div class="company-info">
+                    <h1>FinClick.AI</h1>
+                    <p>منصة التحليل المالي الذكي</p>
+                </div>
+            </div>
+            <div class="report-meta">
+                <h2>Benchmark Comparison Report</h2>
+                <p class="date">Generated: {{REPORT_DATE}}</p>
+                <p class="date">Industry: {{INDUSTRY_SECTOR}}</p>
+                <p class="date">Comparison Period: {{COMPARISON_PERIOD}}</p>
+            </div>
+        </header>
+
+        <!-- Benchmark Overview -->
+        <section class="benchmark-overview">
+            <h3>نظرة عامة على المقارنة المعيارية</h3>
+            <p>
+                يقارن هذا التقرير أداء الشركة مع {{PEER_COUNT}} شركة مماثلة في قطاع {{INDUSTRY_SECTOR}}.
+                تُظهر النتائج موقعنا في المرتبة {{OVERALL_RANK}} من أصل {{TOTAL_COMPANIES}} شركة مع
+                تحقيق {{PERCENTILE_RANK}}% في التصنيف العام.
+            </p>
+
+            <div class="benchmark-summary">
+                <div class="summary-stat">
+                    <div class="value">{{OVERALL_RANK}}</div>
+                    <div class="label">الترتيب العام</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="value">{{PERCENTILE_RANK}}%</div>
+                    <div class="label">المئوية</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="value">{{METRICS_ANALYZED}}</div>
+                    <div class="label">المؤشرات المحللة</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="value">{{PEER_COUNT}}</div>
+                    <div class="label">الشركات المماثلة</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Comparison Cards -->
+        <section class="section">
+            <h3 class="section-title">مقارنة الأداء الرئيسي</h3>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="comparison-header">
+                        <h4 class="metric-name">الربحية</h4>
+                        <span class="industry-avg">متوسط القطاع: {{PROFITABILITY_INDUSTRY_AVG}}%</span>
+                    </div>
+                    <div class="comparison-bars">
+                        <div class="comparison-bar">
+                            <span class="bar-label">أداؤنا</span>
+                            <div class="bar-container">
+                                <div class="bar-fill our-performance" style="width: {{OUR_PROFITABILITY_WIDTH}}%">
+                                    <span class="bar-value">{{OUR_PROFITABILITY}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comparison-bar">
+                            <span class="bar-label">متوسط القطاع</span>
+                            <div class="bar-container">
+                                <div class="bar-fill industry-performance" style="width: {{INDUSTRY_PROFITABILITY_WIDTH}}%">
+                                    <span class="bar-value">{{PROFITABILITY_INDUSTRY_AVG}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comparison-bar">
+                            <span class="bar-label">أفضل أداء</span>
+                            <div class="bar-container">
+                                <div class="bar-fill competitor-performance" style="width: {{TOP_PROFITABILITY_WIDTH}}%">
+                                    <span class="bar-value">{{TOP_PROFITABILITY}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="performance-status">
+                        <span class="status-badge status-excellent">ممتاز</span>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="comparison-header">
+                        <h4 class="metric-name">الكفاءة التشغيلية</h4>
+                        <span class="industry-avg">متوسط القطاع: {{EFFICIENCY_INDUSTRY_AVG}}%</span>
+                    </div>
+                    <div class="comparison-bars">
+                        <div class="comparison-bar">
+                            <span class="bar-label">أداؤنا</span>
+                            <div class="bar-container">
+                                <div class="bar-fill our-performance" style="width: {{OUR_EFFICIENCY_WIDTH}}%">
+                                    <span class="bar-value">{{OUR_EFFICIENCY}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comparison-bar">
+                            <span class="bar-label">متوسط القطاع</span>
+                            <div class="bar-container">
+                                <div class="bar-fill industry-performance" style="width: {{INDUSTRY_EFFICIENCY_WIDTH}}%">
+                                    <span class="bar-value">{{EFFICIENCY_INDUSTRY_AVG}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comparison-bar">
+                            <span class="bar-label">أفضل أداء</span>
+                            <div class="bar-container">
+                                <div class="bar-fill competitor-performance" style="width: {{TOP_EFFICIENCY_WIDTH}}%">
+                                    <span class="bar-value">{{TOP_EFFICIENCY}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="performance-status">
+                        <span class="status-badge status-good">جيد</span>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="comparison-header">
+                        <h4 class="metric-name">السيولة</h4>
+                        <span class="industry-avg">متوسط القطاع: {{LIQUIDITY_INDUSTRY_AVG}}</span>
+                    </div>
+                    <div class="comparison-bars">
+                        <div class="comparison-bar">
+                            <span class="bar-label">أداؤنا</span>
+                            <div class="bar-container">
+                                <div class="bar-fill our-performance" style="width: {{OUR_LIQUIDITY_WIDTH}}%">
+                                    <span class="bar-value">{{OUR_LIQUIDITY}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comparison-bar">
+                            <span class="bar-label">متوسط القطاع</span>
+                            <div class="bar-container">
+                                <div class="bar-fill industry-performance" style="width: {{INDUSTRY_LIQUIDITY_WIDTH}}%">
+                                    <span class="bar-value">{{LIQUIDITY_INDUSTRY_AVG}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comparison-bar">
+                            <span class="bar-label">أفضل أداء</span>
+                            <div class="bar-container">
+                                <div class="bar-fill competitor-performance" style="width: {{TOP_LIQUIDITY_WIDTH}}%">
+                                    <span class="bar-value">{{TOP_LIQUIDITY}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="performance-status">
+                        <span class="status-badge status-average">متوسط</span>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="comparison-header">
+                        <h4 class="metric-name">النمو</h4>
+                        <span class="industry-avg">متوسط القطاع: {{GROWTH_INDUSTRY_AVG}}%</span>
+                    </div>
+                    <div class="comparison-bars">
+                        <div class="comparison-bar">
+                            <span class="bar-label">أداؤنا</span>
+                            <div class="bar-container">
+                                <div class="bar-fill our-performance" style="width: {{OUR_GROWTH_WIDTH}}%">
+                                    <span class="bar-value">{{OUR_GROWTH}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comparison-bar">
+                            <span class="bar-label">متوسط القطاع</span>
+                            <div class="bar-container">
+                                <div class="bar-fill industry-performance" style="width: {{INDUSTRY_GROWTH_WIDTH}}%">
+                                    <span class="bar-value">{{GROWTH_INDUSTRY_AVG}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comparison-bar">
+                            <span class="bar-label">أفضل أداء</span>
+                            <div class="bar-container">
+                                <div class="bar-fill competitor-performance" style="width: {{TOP_GROWTH_WIDTH}}%">
+                                    <span class="bar-value">{{TOP_GROWTH}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="performance-status">
+                        <span class="status-badge status-excellent">ممتاز</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Comparison Table -->
+        <section class="section">
+            <h3 class="section-title">جدول المقارنة التفصيلي</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>المؤشر المالي</th>
+                        <th>أداؤنا</th>
+                        <th>متوسط القطاع</th>
+                        <th>أفضل أداء</th>
+                        <th>أسوأ أداء</th>
+                        <th>ترتيبنا</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>هامش الربح الإجمالي (%)</td>
+                        <td class="our-value">{{GROSS_MARGIN_OUR}}</td>
+                        <td class="industry-value">{{GROSS_MARGIN_AVG}}</td>
+                        <td class="competitor-value">{{GROSS_MARGIN_BEST}}</td>
+                        <td class="competitor-value">{{GROSS_MARGIN_WORST}}</td>
+                        <td class="our-value">{{GROSS_MARGIN_RANK}}</td>
+                    </tr>
+                    <tr>
+                        <td>هامش الربح الصافي (%)</td>
+                        <td class="our-value">{{NET_MARGIN_OUR}}</td>
+                        <td class="industry-value">{{NET_MARGIN_AVG}}</td>
+                        <td class="competitor-value">{{NET_MARGIN_BEST}}</td>
+                        <td class="competitor-value">{{NET_MARGIN_WORST}}</td>
+                        <td class="our-value">{{NET_MARGIN_RANK}}</td>
+                    </tr>
+                    <tr>
+                        <td>العائد على الأصول (%)</td>
+                        <td class="our-value">{{ROA_OUR}}</td>
+                        <td class="industry-value">{{ROA_AVG}}</td>
+                        <td class="competitor-value">{{ROA_BEST}}</td>
+                        <td class="competitor-value">{{ROA_WORST}}</td>
+                        <td class="our-value">{{ROA_RANK}}</td>
+                    </tr>
+                    <tr>
+                        <td>العائد على حقوق الملكية (%)</td>
+                        <td class="our-value">{{ROE_OUR}}</td>
+                        <td class="industry-value">{{ROE_AVG}}</td>
+                        <td class="competitor-value">{{ROE_BEST}}</td>
+                        <td class="competitor-value">{{ROE_WORST}}</td>
+                        <td class="our-value">{{ROE_RANK}}</td>
+                    </tr>
+                    <tr>
+                        <td>نسبة السيولة السريعة</td>
+                        <td class="our-value">{{QUICK_RATIO_OUR}}</td>
+                        <td class="industry-value">{{QUICK_RATIO_AVG}}</td>
+                        <td class="competitor-value">{{QUICK_RATIO_BEST}}</td>
+                        <td class="competitor-value">{{QUICK_RATIO_WORST}}</td>
+                        <td class="our-value">{{QUICK_RATIO_RANK}}</td>
+                    </tr>
+                    <tr>
+                        <td>نسبة الدين إلى حقوق الملكية</td>
+                        <td class="our-value">{{DEBT_EQUITY_OUR}}</td>
+                        <td class="industry-value">{{DEBT_EQUITY_AVG}}</td>
+                        <td class="competitor-value">{{DEBT_EQUITY_BEST}}</td>
+                        <td class="competitor-value">{{DEBT_EQUITY_WORST}}</td>
+                        <td class="our-value">{{DEBT_EQUITY_RANK}}</td>
+                    </tr>
+                    <tr>
+                        <td>معدل دوران الأصول</td>
+                        <td class="our-value">{{ASSET_TURNOVER_OUR}}</td>
+                        <td class="industry-value">{{ASSET_TURNOVER_AVG}}</td>
+                        <td class="competitor-value">{{ASSET_TURNOVER_BEST}}</td>
+                        <td class="competitor-value">{{ASSET_TURNOVER_WORST}}</td>
+                        <td class="our-value">{{ASSET_TURNOVER_RANK}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Industry Ranking -->
+        <section class="ranking-section">
+            <h4 class="ranking-title">ترتيب الشركات في القطاع</h4>
+            <div class="ranking-list">
+                <div class="ranking-item">
+                    <div class="rank-number">1</div>
+                    <div class="rank-company">{{RANK_1_COMPANY}}</div>
+                    <div class="rank-score">{{RANK_1_SCORE}}</div>
+                </div>
+                <div class="ranking-item">
+                    <div class="rank-number">2</div>
+                    <div class="rank-company">{{RANK_2_COMPANY}}</div>
+                    <div class="rank-score">{{RANK_2_SCORE}}</div>
+                </div>
+                <div class="ranking-item our-rank">
+                    <div class="rank-number">{{OUR_RANK_NUMBER}}</div>
+                    <div class="rank-company">شركتنا</div>
+                    <div class="rank-score">{{OUR_SCORE}}</div>
+                </div>
+                <div class="ranking-item">
+                    <div class="rank-number">{{RANK_BELOW_NUMBER}}</div>
+                    <div class="rank-company">{{RANK_BELOW_COMPANY}}</div>
+                    <div class="rank-score">{{RANK_BELOW_SCORE}}</div>
+                </div>
+                <div class="ranking-item">
+                    <div class="rank-number">{{LAST_RANK_NUMBER}}</div>
+                    <div class="rank-company">{{LAST_RANK_COMPANY}}</div>
+                    <div class="rank-score">{{LAST_RANK_SCORE}}</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-break"></div>
+
+        <!-- Performance Radar Chart -->
+        <section class="radar-section">
+            <h4 class="radar-title">مخطط الأداء الرادياري</h4>
+            <div class="radar-placeholder">
+                مخطط رادياري متعدد الأبعاد<br>
+                (سيتم إدراج المخطط التفاعلي هنا)<br>
+                يظهر أداءنا مقابل متوسط القطاع عبر جميع المؤشرات
+            </div>
+        </section>
+
+        <!-- Trend Analysis -->
+        <section class="trend-analysis">
+            <h4>تحليل الاتجاهات</h4>
+            <div class="trend-grid">
+                <div class="trend-item">
+                    <h5>الربحية</h5>
+                    <p style="color: #64748b; font-size: 14px;">تحسن مستمر خلال آخر 3 سنوات</p>
+                    <div class="trend-direction">
+                        <span class="trend-up">↗</span>
+                        <span>اتجاه صاعد</span>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <h5>السيولة</h5>
+                    <p style="color: #64748b; font-size: 14px;">تذبذب طفيف مع استقرار عام</p>
+                    <div class="trend-direction">
+                        <span class="trend-stable">→</span>
+                        <span>مستقر</span>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <h5>الكفاءة</h5>
+                    <p style="color: #64748b; font-size: 14px;">تحسن ملحوظ بعد التحديثات</p>
+                    <div class="trend-direction">
+                        <span class="trend-up">↗</span>
+                        <span>تحسن كبير</span>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <h5>النمو</h5>
+                    <p style="color: #64748b; font-size: 14px;">نمو قوي يفوق متوسط القطاع</p>
+                    <div class="trend-direction">
+                        <span class="trend-up">↗</span>
+                        <span>نمو متسارع</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gap Analysis -->
+        <section class="gap-analysis">
+            <h4>تحليل الفجوات</h4>
+            <div class="gap-item">
+                <div class="gap-metric">فجوة الربحية</div>
+                <div class="gap-value">
+                    نحتاج لتحسين هامش الربح بـ {{PROFITABILITY_GAP}}% للوصول لأفضل أداء في القطاع
+                </div>
+            </div>
+            <div class="gap-item">
+                <div class="gap-metric">فجوة الكفاءة</div>
+                <div class="gap-value">
+                    يمكن تحسين الكفاءة التشغيلية بـ {{EFFICIENCY_GAP}}% من خلال تحسين العمليات
+                </div>
+            </div>
+            <div class="gap-item">
+                <div class="gap-metric">فجوة السيولة</div>
+                <div class="gap-value">
+                    زيادة السيولة بـ {{LIQUIDITY_GAP}} نقطة ستضعنا في المركز الأول
+                </div>
+            </div>
+        </section>
+
+        <!-- Improvement Recommendations -->
+        <section class="improvement-recommendations">
+            <h4>توصيات التحسين</h4>
+
+            <div class="recommendation-card">
+                <h5>تحسين هامش الربح</h5>
+                <p style="color: #64748b; font-size: 14px;">
+                    مراجعة هيكل التكاليف وتحسين عمليات التسعير لرفع الهامش إلى مستوى أفضل المنافسين
+                </p>
+                <span class="recommendation-impact impact-high">تأثير عالي</span>
+            </div>
+
+            <div class="recommendation-card">
+                <h5>تعزيز الكفاءة التشغيلية</h5>
+                <p style="color: #64748b; font-size: 14px;">
+                    تطبيق تقنيات الأتمتة وتحسين سلسلة التوريد لزيادة الكفاءة العامة
+                </p>
+                <span class="recommendation-impact impact-high">تأثير عالي</span>
+            </div>
+
+            <div class="recommendation-card">
+                <h5>تحسين إدارة السيولة</h5>
+                <p style="color: #64748b; font-size: 14px;">
+                    تطوير استراتيجية أفضل لإدارة رأس المال العامل وتحسين التدفق النقدي
+                </p>
+                <span class="recommendation-impact impact-medium">تأثير متوسط</span>
+            </div>
+
+            <div class="recommendation-card">
+                <h5>الاستثمار في النمو</h5>
+                <p style="color: #64748b; font-size: 14px;">
+                    الاستفادة من الموقع القوي للاستثمار في فرص نمو جديدة وتوسيع الحصة السوقية
+                </p>
+                <span class="recommendation-impact impact-high">تأثير عالي</span>
+            </div>
+        </section>
+
+        <!-- Best Practice Insights -->
+        <section class="section">
+            <h3 class="section-title">أفضل الممارسات من قادة القطاع</h3>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4 style="color: #059669; margin-bottom: 15px;">إدارة التكاليف</h4>
+                    <p style="color: #64748b; font-size: 14px; margin-bottom: 10px;">
+                        قائد القطاع يحقق كفاءة أعلى بـ 15% من خلال:
+                    </p>
+                    <ul style="color: #64748b; font-size: 14px; padding-right: 20px;">
+                        <li>أتمتة العمليات الروتينية</li>
+                        <li>تحسين إدارة المخزون</li>
+                        <li>تطبيق مبادئ الإنتاج الخالي من الهدر</li>
+                    </ul>
+                </div>
+
+                <div class="comparison-card">
+                    <h4 style="color: #059669; margin-bottom: 15px;">استراتيجية التمويل</h4>
+                    <p style="color: #64748b; font-size: 14px; margin-bottom: 10px;">
+                        أفضل الشركات تحقق توازناً مثالياً من خلال:
+                    </p>
+                    <ul style="color: #64748b; font-size: 14px; padding-right: 20px;">
+                        <li>هيكل رأس مال محسن</li>
+                        <li>تنويع مصادر التمويل</li>
+                        <li>إدارة مخاطر أسعار الفائدة</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>تم إنشاء هذا التقرير بواسطة FinClick.AI | مقارنات معيارية متقدمة</p>
+            <p>للاستفسارات: benchmark@finclick.ai | +966 11 123 4567</p>
+            <p style="margin-top: 10px;">
+                البيانات مستمدة من {{DATA_SOURCES}} مصدر موثق ومحدثة حتى {{DATA_DATE}}
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

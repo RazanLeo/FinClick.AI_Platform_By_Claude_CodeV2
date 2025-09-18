@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير تقييم المخاطر - FinClick.AI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 3px solid #dc2626;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .company-info h1 {
+            color: #dc2626;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .company-info p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .report-meta {
+            text-align: left;
+            direction: ltr;
+        }
+
+        .report-meta h2 {
+            color: #dc2626;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .report-meta .date {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Risk Level Indicator */
+        .risk-overview {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-right: 4px solid #dc2626;
+        }
+
+        .risk-level {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .risk-indicator {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .risk-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .risk-high {
+            background: #dc2626;
+        }
+
+        .risk-medium {
+            background: #f59e0b;
+        }
+
+        .risk-low {
+            background: #16a34a;
+        }
+
+        .risk-score {
+            font-size: 36px;
+            font-weight: 700;
+            color: #dc2626;
+        }
+
+        /* Risk Categories Grid */
+        .risk-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .risk-category {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 3px solid #dc2626;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .category-title {
+            color: #dc2626;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .category-score {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .risk-factors {
+            list-style: none;
+            padding: 0;
+        }
+
+        .risk-factors li {
+            margin-bottom: 8px;
+            padding-right: 20px;
+            position: relative;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .risk-factors li:before {
+            content: "⚠";
+            color: #f59e0b;
+            position: absolute;
+            right: 0;
+        }
+
+        /* Risk Matrix */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #dc2626;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fee2e2;
+        }
+
+        .risk-matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            margin: 20px 0;
+            background: #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .matrix-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+            color: white;
+        }
+
+        .matrix-header {
+            background: #374151;
+            color: white;
+            font-weight: 700;
+        }
+
+        .matrix-low {
+            background: #16a34a;
+        }
+
+        .matrix-medium {
+            background: #f59e0b;
+        }
+
+        .matrix-high {
+            background: #dc2626;
+        }
+
+        /* Risk Table */
+        .risk-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .risk-table thead {
+            background: #dc2626;
+            color: white;
+        }
+
+        .risk-table th,
+        .risk-table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #fee2e2;
+        }
+
+        .risk-table th {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .risk-table tbody tr:hover {
+            background: #fef2f2;
+        }
+
+        /* Risk Mitigation */
+        .mitigation-plan {
+            background: #f0fdf4;
+            border-right: 4px solid #16a34a;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .mitigation-plan h4 {
+            color: #16a34a;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .action-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .action-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #16a34a;
+        }
+
+        .action-item h5 {
+            color: #16a34a;
+            margin-bottom: 8px;
+        }
+
+        .action-item p {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .action-priority {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .priority-low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* Timeline */
+        .timeline {
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .timeline-date {
+            background: #dc2626;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            margin-left: 15px;
+            white-space: nowrap;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding: 15px;
+            background: #fef2f2;
+            border-radius: 8px;
+            border-right: 3px solid #dc2626;
+        }
+
+        .timeline-content h5 {
+            color: #dc2626;
+            margin-bottom: 5px;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 2px solid #fee2e2;
+            padding-top: 20px;
+            margin-top: 40px;
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        /* Page break for PDF */
+        .page-break {
+            page-break-before: always;
+        }
+
+        @media print {
+            .container {
+                max-width: none;
+                margin: 0;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo">FC</div>
+                <div class="company-info">
+                    <h1>FinClick.AI</h1>
+                    <p>منصة التحليل المالي الذكي</p>
+                </div>
+            </div>
+            <div class="report-meta">
+                <h2>Risk Assessment Report</h2>
+                <p class="date">Generated: {{REPORT_DATE}}</p>
+                <p class="date">Assessment Period: {{ASSESSMENT_PERIOD}}</p>
+            </div>
+        </header>
+
+        <!-- Risk Overview -->
+        <section class="risk-overview">
+            <div class="risk-level">
+                <div>
+                    <h3 style="color: #dc2626; margin-bottom: 10px;">مستوى المخاطر الإجمالي</h3>
+                    <div class="risk-indicator">
+                        <span class="risk-badge {{OVERALL_RISK_CLASS}}">{{OVERALL_RISK_LEVEL}}</span>
+                        <span class="risk-score">{{RISK_SCORE}}/100</span>
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top: 15px; color: #64748b;">
+                تم تقييم {{TOTAL_RISKS}} مخاطر محتملة عبر {{RISK_CATEGORIES_COUNT}} فئات رئيسية.
+                تتطلب {{HIGH_PRIORITY_RISKS}} مخاطر اهتماماً فورياً.
+            </p>
+        </section>
+
+        <!-- Risk Categories -->
+        <section class="section">
+            <h3 class="section-title">فئات المخاطر</h3>
+            <div class="risk-categories">
+                <div class="risk-category">
+                    <div class="category-header">
+                        <h4 class="category-title">مخاطر السيولة</h4>
+                        <span class="category-score">{{LIQUIDITY_RISK_SCORE}}</span>
+                    </div>
+                    <ul class="risk-factors">
+                        <li>انخفاض نسبة السيولة السريعة</li>
+                        <li>تأخر في تحصيل الذمم المدينة</li>
+                        <li>التزامات قصيرة الأجل مرتفعة</li>
+                        <li>تقلبات في التدفق النقدي</li>
+                    </ul>
+                </div>
+
+                <div class="risk-category">
+                    <div class="category-header">
+                        <h4 class="category-title">مخاطر الائتمان</h4>
+                        <span class="category-score">{{CREDIT_RISK_SCORE}}</span>
+                    </div>
+                    <ul class="risk-factors">
+                        <li>تركز العملاء الكبار</li>
+                        <li>ديون معدومة متزايدة</li>
+                        <li>ضعف في سياسات الائتمان</li>
+                        <li>تدهور الوضع الاقتصادي للعملاء</li>
+                    </ul>
+                </div>
+
+                <div class="risk-category">
+                    <div class="category-header">
+                        <h4 class="category-title">مخاطر السوق</h4>
+                        <span class="category-score">{{MARKET_RISK_SCORE}}</span>
+                    </div>
+                    <ul class="risk-factors">
+                        <li>تقلبات أسعار الصرف</li>
+                        <li>تغيرات أسعار الفائدة</li>
+                        <li>تذبذب أسعار المواد الخام</li>
+                        <li>عدم استقرار السوق</li>
+                    </ul>
+                </div>
+
+                <div class="risk-category">
+                    <div class="category-header">
+                        <h4 class="category-title">مخاطر تشغيلية</h4>
+                        <span class="category-score">{{OPERATIONAL_RISK_SCORE}}</span>
+                    </div>
+                    <ul class="risk-factors">
+                        <li>أعطال في الأنظمة</li>
+                        <li>نقص في الموارد البشرية</li>
+                        <li>ضعف في الضوابط الداخلية</li>
+                        <li>مخاطر الأمن السيبراني</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risk Matrix -->
+        <section class="section">
+            <h3 class="section-title">مصفوفة المخاطر</h3>
+            <div class="risk-matrix">
+                <div class="matrix-cell matrix-header">الاحتمال / التأثير</div>
+                <div class="matrix-cell matrix-header">منخفض</div>
+                <div class="matrix-cell matrix-header">متوسط</div>
+                <div class="matrix-cell matrix-header">عالي</div>
+                <div class="matrix-cell matrix-header">حرج</div>
+
+                <div class="matrix-cell matrix-header">عالي</div>
+                <div class="matrix-cell matrix-medium">متوسط</div>
+                <div class="matrix-cell matrix-high">عالي</div>
+                <div class="matrix-cell matrix-high">عالي</div>
+                <div class="matrix-cell matrix-high">حرج</div>
+
+                <div class="matrix-cell matrix-header">متوسط</div>
+                <div class="matrix-cell matrix-low">منخفض</div>
+                <div class="matrix-cell matrix-medium">متوسط</div>
+                <div class="matrix-cell matrix-high">عالي</div>
+                <div class="matrix-cell matrix-high">عالي</div>
+
+                <div class="matrix-cell matrix-header">منخفض</div>
+                <div class="matrix-cell matrix-low">منخفض</div>
+                <div class="matrix-cell matrix-low">منخفض</div>
+                <div class="matrix-cell matrix-medium">متوسط</div>
+                <div class="matrix-cell matrix-medium">متوسط</div>
+            </div>
+        </section>
+
+        <!-- Detailed Risk Analysis -->
+        <section class="section">
+            <h3 class="section-title">تحليل مفصل للمخاطر</h3>
+            <table class="risk-table">
+                <thead>
+                    <tr>
+                        <th>المخاطر</th>
+                        <th>الفئة</th>
+                        <th>الاحتمال</th>
+                        <th>التأثير</th>
+                        <th>مستوى المخاطر</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>نقص السيولة النقدية</td>
+                        <td>سيولة</td>
+                        <td>عالي</td>
+                        <td>حرج</td>
+                        <td style="color: #dc2626; font-weight: bold;">عالي</td>
+                        <td>قيد المعالجة</td>
+                    </tr>
+                    <tr>
+                        <td>تراجع قطاع التصنيع</td>
+                        <td>سوق</td>
+                        <td>متوسط</td>
+                        <td>عالي</td>
+                        <td style="color: #f59e0b; font-weight: bold;">متوسط</td>
+                        <td>تحت المراقبة</td>
+                    </tr>
+                    <tr>
+                        <td>تقلبات أسعار الصرف</td>
+                        <td>سوق</td>
+                        <td>عالي</td>
+                        <td>متوسط</td>
+                        <td style="color: #f59e0b; font-weight: bold;">متوسط</td>
+                        <td>تم التحوط</td>
+                    </tr>
+                    <tr>
+                        <td>تركز العملاء</td>
+                        <td>ائتمان</td>
+                        <td>متوسط</td>
+                        <td>عالي</td>
+                        <td style="color: #f59e0b; font-weight: bold;">متوسط</td>
+                        <td>تحت المعالجة</td>
+                    </tr>
+                    <tr>
+                        <td>أعطال الأنظمة</td>
+                        <td>تشغيلية</td>
+                        <td>منخفض</td>
+                        <td>متوسط</td>
+                        <td style="color: #16a34a; font-weight: bold;">منخفض</td>
+                        <td>تحت السيطرة</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <div class="page-break"></div>
+
+        <!-- Risk Mitigation Plan -->
+        <section class="section">
+            <h3 class="section-title">خطة إدارة المخاطر</h3>
+
+            <div class="mitigation-plan">
+                <h4>الإجراءات المطلوبة فوراً</h4>
+                <div class="action-items">
+                    <div class="action-item">
+                        <h5>تحسين إدارة السيولة</h5>
+                        <p>إنشاء خط ائتماني احتياطي وتسريع عمليات التحصيل</p>
+                        <span class="action-priority priority-high">أولوية عالية</span>
+                    </div>
+                    <div class="action-item">
+                        <h5>تنويع قاعدة العملاء</h5>
+                        <p>تطوير استراتيجية لجذب عملاء جدد وتقليل التركز</p>
+                        <span class="action-priority priority-high">أولوية عالية</span>
+                    </div>
+                    <div class="action-item">
+                        <h5>تعزيز الضوابط الداخلية</h5>
+                        <p>مراجعة وتحديث السياسات والإجراءات المالية</p>
+                        <span class="action-priority priority-medium">أولوية متوسطة</span>
+                    </div>
+                    <div class="action-item">
+                        <h5>خطة الطوارئ التشغيلية</h5>
+                        <p>وضع خطط بديلة للعمليات الحرجة</p>
+                        <span class="action-priority priority-medium">أولوية متوسطة</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation Timeline -->
+        <section class="section">
+            <h3 class="section-title">الجدول الزمني للتنفيذ</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">الأسبوع 1</div>
+                    <div class="timeline-content">
+                        <h5>تقييم السيولة الطارئ</h5>
+                        <p>مراجعة شاملة للوضع النقدي وتحديد الاحتياجات الفورية</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">الأسبوع 2-3</div>
+                    <div class="timeline-content">
+                        <h5>ترتيب التمويل الطارئ</h5>
+                        <p>التفاوض مع البنوك لترتيب خطوط ائتمان إضافية</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">الشهر 1</div>
+                    <div class="timeline-content">
+                        <h5>تطوير استراتيجية تنويع العملاء</h5>
+                        <p>وضع خطة تسويقية لجذب قطاعات جديدة من العملاء</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">الشهر 2-3</div>
+                    <div class="timeline-content">
+                        <h5>تنفيذ الضوابط المحسنة</h5>
+                        <p>تطبيق السياسات الجديدة وتدريب الموظفين</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Performance Indicators -->
+        <section class="section">
+            <h3 class="section-title">مؤشرات المتابعة</h3>
+            <div class="risk-categories">
+                <div class="risk-category">
+                    <div class="category-header">
+                        <h4 class="category-title">نسبة السيولة السريعة</h4>
+                        <span class="category-score">{{QUICK_RATIO}}</span>
+                    </div>
+                    <p style="color: #64748b; font-size: 14px;">
+                        الهدف: أكبر من 1.2<br>
+                        التكرار: أسبوعي
+                    </p>
+                </div>
+                <div class="risk-category">
+                    <div class="category-header">
+                        <h4 class="category-title">تركز العملاء</h4>
+                        <span class="category-score">{{CUSTOMER_CONCENTRATION}}%</span>
+                    </div>
+                    <p style="color: #64748b; font-size: 14px;">
+                        الهدف: أقل من 30%<br>
+                        التكرار: شهري
+                    </p>
+                </div>
+                <div class="risk-category">
+                    <div class="category-header">
+                        <h4 class="category-title">معدل الديون المعدومة</h4>
+                        <span class="category-score">{{BAD_DEBT_RATIO}}%</span>
+                    </div>
+                    <p style="color: #64748b; font-size: 14px;">
+                        الهدف: أقل من 2%<br>
+                        التكرار: شهري
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>تم إنشاء هذا التقرير بواسطة FinClick.AI | تقييم المخاطر الذكي</p>
+            <p>للاستفسارات الطارئة: emergency@finclick.ai | +966 11 123 4567</p>
+            <p style="color: #dc2626; margin-top: 10px;">⚠ هذا التقرير سري ومخصص للاستخدام الداخلي فقط</p>
+        </footer>
+    </div>
+</body>
+</html>

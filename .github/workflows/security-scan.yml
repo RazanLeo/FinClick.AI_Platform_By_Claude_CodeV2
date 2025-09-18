@@ -1,0 +1,466 @@
+# Security Scanning Workflow for FinClick.AI
+# Comprehensive security scanning for vulnerabilities, secrets, and compliance
+
+name: Security Scanning
+
+on:
+  schedule:
+    # Run security scans daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  # Secret Detection
+  secret-detection:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
+
+      - name: GitLeaks Secret Scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+  # Dependency Vulnerability Scanning
+  dependency-scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      matrix:
+        package-manager: [npm, pip, docker]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: matrix.package-manager == 'npm'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Python
+        if: matrix.package-manager == 'pip'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          case "${{ matrix.package-manager }}" in
+            npm)
+              npm ci
+              cd frontend && npm ci
+              cd ../backend/api-gateway && npm ci
+              ;;
+            pip)
+              pip install -r requirements.txt || echo "No requirements.txt found"
+              ;;
+            docker)
+              echo "Docker scanning will be handled by container tools"
+              ;;
+          esac
+
+      - name: Run Snyk Security Scan
+        uses: snyk/actions/node@master
+        if: matrix.package-manager == 'npm'
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --fail-on=all
+
+      - name: Run Safety Scan (Python)
+        if: matrix.package-manager == 'pip'
+        run: |
+          pip install safety
+          safety check --json --output safety-report.json || true
+
+      - name: OSPA Dependency Scan
+        uses: ossf/scorecard-action@v2.3.1
+        with:
+          results_file: ospa-results.sarif
+          results_format: sarif
+          publish_results: true
+
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ospa-results.sarif
+
+  # Container Security Scanning
+  container-security:
+    name: Container Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      matrix:
+        service: [frontend, api-gateway, auth-service]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t test-image:latest \
+            -f ./${{ matrix.service == 'frontend' && 'frontend' || 'backend/' }}${{ matrix.service != 'frontend' && matrix.service || '' }}/Dockerfile.production \
+            ./${{ matrix.service == 'frontend' && 'frontend' || 'backend/' }}${{ matrix.service != 'frontend' && matrix.service || '' }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'test-image:latest'
+          format: 'sarif'
+          output: 'trivy-${{ matrix.service }}.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-${{ matrix.service }}.sarif'
+
+      - name: Run Grype vulnerability scanner
+        uses: anchore/scan-action@v3
+        with:
+          image: "test-image:latest"
+          fail-build: true
+          severity-cutoff: high
+          output-format: sarif
+          output-file: grype-${{ matrix.service }}.sarif
+
+      - name: Upload Grype scan results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: grype-${{ matrix.service }}.sarif
+
+      - name: Docker Scout CVE Analysis
+        uses: docker/scout-action@v1
+        with:
+          command: cves
+          image: test-image:latest
+          sarif-file: scout-${{ matrix.service }}.sarif
+
+      - name: Upload Scout scan results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: scout-${{ matrix.service }}.sarif
+
+  # Infrastructure Security Scanning
+  infrastructure-security:
+    name: Infrastructure Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Checkov (Infrastructure as Code)
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
+          framework: dockerfile,docker_compose,github_actions,secrets
+          output_format: sarif
+          output_file_path: checkov.sarif
+          download_external_modules: true
+
+      - name: Upload Checkov results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: checkov.sarif
+
+      - name: Terraform Security Scan (if applicable)
+        if: hashFiles('**/*.tf') != ''
+        uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          soft_fail: true
+
+      - name: Kubernetes Security Scan
+        if: hashFiles('**/*.yaml', '**/*.yml') != ''
+        run: |
+          # Install kubesec
+          wget https://github.com/controlplaneio/kubesec/releases/latest/download/kubesec_linux_amd64.tar.gz
+          tar -xzf kubesec_linux_amd64.tar.gz
+          chmod +x kubesec
+
+          # Scan Kubernetes manifests
+          find . -name "*.yaml" -o -name "*.yml" | grep -E "(k8s|kubernetes)" | while read file; do
+            echo "Scanning $file"
+            ./kubesec scan "$file" || true
+          done
+
+  # Code Security Analysis
+  code-security:
+    name: Code Security Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: 'javascript,typescript,python'
+          queries: security-extended,security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+      - name: Semgrep Security Scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/owasp-top-ten
+            p/nodejs
+            p/typescript
+            p/react
+
+      - name: ESLint Security Scan
+        run: |
+          npm install -g eslint-plugin-security
+          npm install -g @typescript-eslint/eslint-plugin
+
+          # Create security-focused ESLint config
+          cat > .eslintrc.security.js << 'EOF'
+          module.exports = {
+            plugins: ['security'],
+            extends: ['plugin:security/recommended'],
+            rules: {
+              'security/detect-object-injection': 'error',
+              'security/detect-non-literal-regexp': 'error',
+              'security/detect-unsafe-regex': 'error',
+              'security/detect-buffer-noassert': 'error',
+              'security/detect-child-process': 'error',
+              'security/detect-disable-mustache-escape': 'error',
+              'security/detect-eval-with-expression': 'error',
+              'security/detect-no-csrf-before-method-override': 'error',
+              'security/detect-non-literal-fs-filename': 'error',
+              'security/detect-non-literal-require': 'error',
+              'security/detect-possible-timing-attacks': 'error',
+              'security/detect-pseudoRandomBytes': 'error'
+            }
+          };
+          EOF
+
+          npx eslint --config .eslintrc.security.js --ext .js,.ts,.jsx,.tsx . || true
+
+  # Compliance Scanning
+  compliance-scan:
+    name: Compliance Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: GDPR Compliance Scan
+        run: |
+          # Check for GDPR compliance patterns
+          echo "Scanning for GDPR compliance..."
+
+          # Check for data processing patterns
+          grep -r -i "personal.*data\|user.*data\|privacy\|consent\|gdpr" . \
+            --include="*.js" --include="*.ts" --include="*.py" --include="*.md" || true
+
+          # Check for data retention policies
+          find . -name "*.md" -exec grep -l -i "retention\|deletion\|expiry" {} \; || true
+
+      - name: PCI DSS Compliance Check
+        run: |
+          echo "Scanning for PCI DSS compliance..."
+
+          # Check for credit card patterns (should be avoided in code)
+          grep -r -E "\b4[0-9]{12}(?:[0-9]{3})?\b|\b5[1-5][0-9]{14}\b|\b3[47][0-9]{13}\b" . \
+            --include="*.js" --include="*.ts" --include="*.py" || echo "No credit card patterns found (good)"
+
+          # Check for encryption usage
+          grep -r -i "encrypt\|crypto\|cipher\|hash" . \
+            --include="*.js" --include="*.ts" --include="*.py" | head -20 || true
+
+      - name: SOC 2 Compliance Check
+        run: |
+          echo "Scanning for SOC 2 compliance..."
+
+          # Check for logging and monitoring
+          grep -r -i "log\|audit\|monitor" . \
+            --include="*.js" --include="*.ts" --include="*.py" | head -10 || true
+
+          # Check for access control patterns
+          grep -r -i "auth\|permission\|role\|access" . \
+            --include="*.js" --include="*.ts" --include="*.py" | head -10 || true
+
+  # License Compliance
+  license-scan:
+    name: License Compliance Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd frontend && npm ci
+
+      - name: License Compliance Check
+        run: |
+          npx license-checker --summary
+          npx license-checker --excludePrivatePackages --json > licenses.json
+
+      - name: Check for GPL licenses
+        run: |
+          # Alert on GPL licenses which might require source disclosure
+          grep -i "gpl" licenses.json && echo "WARNING: GPL licenses found" || echo "No GPL licenses found"
+
+      - name: Upload license report
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-report
+          path: licenses.json
+
+  # Security Report Generation
+  security-report:
+    name: Generate Security Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [secret-detection, dependency-scan, container-security, infrastructure-security, code-security, compliance-scan, license-scan]
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Generate Security Report
+        run: |
+          cat > security-report.md << 'EOF'
+          # FinClick.AI Security Scan Report
+
+          **Scan Date:** $(date)
+          **Repository:** ${{ github.repository }}
+          **Branch:** ${{ github.ref }}
+          **Commit:** ${{ github.sha }}
+
+          ## Summary
+
+          This report contains the results of comprehensive security scanning including:
+          - Secret detection
+          - Dependency vulnerability scanning
+          - Container security scanning
+          - Infrastructure security scanning
+          - Code security analysis
+          - Compliance checking
+          - License compliance
+
+          ## Results
+
+          ### Secret Detection
+          - TruffleHog: ${{ needs.secret-detection.result }}
+          - GitLeaks: ${{ needs.secret-detection.result }}
+
+          ### Dependency Scanning
+          - Snyk: ${{ needs.dependency-scan.result }}
+          - OSPA: ${{ needs.dependency-scan.result }}
+
+          ### Container Security
+          - Trivy: ${{ needs.container-security.result }}
+          - Grype: ${{ needs.container-security.result }}
+          - Docker Scout: ${{ needs.container-security.result }}
+
+          ### Infrastructure Security
+          - Checkov: ${{ needs.infrastructure-security.result }}
+
+          ### Code Security
+          - CodeQL: ${{ needs.code-security.result }}
+          - Semgrep: ${{ needs.code-security.result }}
+
+          ### Compliance
+          - GDPR: ${{ needs.compliance-scan.result }}
+          - PCI DSS: ${{ needs.compliance-scan.result }}
+          - SOC 2: ${{ needs.compliance-scan.result }}
+
+          ### License Compliance
+          - License Check: ${{ needs.license-scan.result }}
+
+          ## Recommendations
+
+          1. Review and address any high or critical vulnerabilities found
+          2. Ensure all secrets are properly managed using secret management tools
+          3. Regularly update dependencies to latest secure versions
+          4. Implement security best practices in code development
+          5. Maintain compliance with relevant regulations
+
+          ## Next Steps
+
+          - Address critical and high severity findings immediately
+          - Schedule regular security reviews
+          - Update security policies and procedures as needed
+          - Consider implementing additional security controls
+
+          EOF
+
+      - name: Upload Security Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: security-report.md
+
+      - name: Notify Security Team
+        if: contains(needs.*.result, 'failure')
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          channel: '#security'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_SECURITY }}
+          fields: repo,message,commit,author,workflow

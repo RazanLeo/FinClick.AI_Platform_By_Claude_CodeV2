@@ -1,0 +1,1375 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+           xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+           xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
+
+  <w:body>
+
+    <!-- Cover Page -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Title"/>
+        <w:jc w:val="center"/>
+        <w:spacing w:before="1440" w:after="360"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="0EA5E9"/>
+          <w:sz w:val="48"/>
+          <w:szCs w:val="48"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>التوصيات الاستراتيجية</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+        <w:spacing w:after="240"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="0EA5E9"/>
+          <w:sz w:val="24"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>{{COMPANY_NAME}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+        <w:spacing w:after="480"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="64748B"/>
+          <w:sz w:val="16"/>
+        </w:rPr>
+        <w:t>خطة عمل شاملة للنمو والتطوير المستدام</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Strategy Overview Box -->
+    <w:tbl>
+      <w:tblPr>
+        <w:tblW w:w="8000" w:type="pct"/>
+        <w:jc w:val="center"/>
+        <w:tblBorders>
+          <w:top w:val="single" w:sz="18" w:color="0EA5E9"/>
+          <w:left w:val="single" w:sz="18" w:color="0EA5E9"/>
+          <w:bottom w:val="single" w:sz="18" w:color="0EA5E9"/>
+          <w:right w:val="single" w:sz="18" w:color="0EA5E9"/>
+        </w:tblBorders>
+      </w:tblPr>
+      <w:tblGrid>
+        <w:gridCol w:w="8000"/>
+      </w:tblGrid>
+
+      <w:tr>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="F0F9FF"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+              <w:spacing w:after="120"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="0EA5E9"/>
+                <w:sz w:val="20"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>الملخص الاستراتيجي</w:t>
+            </w:r>
+          </w:p>
+
+          <w:p>
+            <w:pPr>
+              <w:spacing w:after="80"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:b/>
+              </w:rPr>
+              <w:t>الهدف الاستراتيجي: </w:t>
+            </w:r>
+            <w:r>
+              <w:t>{{STRATEGIC_OBJECTIVE}}</w:t>
+            </w:r>
+          </w:p>
+
+          <w:p>
+            <w:pPr>
+              <w:spacing w:after="80"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:b/>
+              </w:rPr>
+              <w:t>الإطار الزمني: </w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="0EA5E9"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{TIME_FRAME}}</w:t>
+            </w:r>
+          </w:p>
+
+          <w:p>
+            <w:pPr>
+              <w:spacing w:after="80"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:b/>
+              </w:rPr>
+              <w:t>الاستثمار المطلوب: </w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="16A34A"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{REQUIRED_INVESTMENT}}</w:t>
+            </w:r>
+          </w:p>
+
+          <w:p>
+            <w:pPr>
+              <w:spacing w:after="80"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:b/>
+              </w:rPr>
+              <w:t>العائد المتوقع: </w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="16A34A"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{EXPECTED_ROI}}</w:t>
+            </w:r>
+          </w:p>
+
+          <w:p>
+            <w:r>
+              <w:rPr>
+                <w:b/>
+              </w:rPr>
+              <w:t>مستوى الأولوية: </w:t>
+            </w:r>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="{{PRIORITY_COLOR}}"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{PRIORITY_LEVEL}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+    </w:tbl>
+
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+        <w:spacing w:before="360"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="64748B"/>
+          <w:sz w:val="14"/>
+        </w:rPr>
+        <w:t>إعداد: فريق الاستراتيجية - FinClick.AI | {{REPORT_DATE}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Page Break -->
+    <w:p>
+      <w:r>
+        <w:br w:type="page"/>
+      </w:r>
+    </w:p>
+
+    <!-- Current Situation Analysis -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+        <w:spacing w:before="240" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="0EA5E9"/>
+          <w:sz w:val="24"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>1. تحليل الوضع الحالي</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:t>تواجه {{COMPANY_NAME}} في الوقت الحالي {{CURRENT_CHALLENGES_SUMMARY}}. ورغم هذه التحديات، تتمتع الشركة بـ {{CURRENT_STRENGTHS_SUMMARY}} مما يوفر أساساً قوياً لتنفيذ الاستراتيجيات المقترحة.</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- SWOT Analysis -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading2"/>
+        <w:spacing w:before="240" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="0EA5E9"/>
+          <w:sz w:val="18"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>تحليل SWOT المحدث</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- SWOT Table -->
+    <w:tbl>
+      <w:tblPr>
+        <w:tblStyle w:val="TableGrid"/>
+        <w:tblW w:w="0" w:type="auto"/>
+      </w:tblPr>
+      <w:tblGrid>
+        <w:gridCol w:w="3500"/>
+        <w:gridCol w:w="3500"/>
+      </w:tblGrid>
+
+      <!-- Strengths and Weaknesses Row -->
+      <w:tr>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="DCFCE7"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="16A34A"/>
+                <w:sz w:val="16"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>نقاط القوة (Strengths)</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="1"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{STRENGTH_1}}</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="1"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{STRENGTH_2}}</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="1"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{STRENGTH_3}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="FEE2E2"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="DC2626"/>
+                <w:sz w:val="16"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>نقاط الضعف (Weaknesses)</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="2"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{WEAKNESS_1}}</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="2"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{WEAKNESS_2}}</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="2"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{WEAKNESS_3}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+
+      <!-- Opportunities and Threats Row -->
+      <w:tr>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="E0F2FE"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="0EA5E9"/>
+                <w:sz w:val="16"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>الفرص (Opportunities)</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="3"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{OPPORTUNITY_1}}</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="3"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{OPPORTUNITY_2}}</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="3"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{OPPORTUNITY_3}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="FEF3C7"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="F59E0B"/>
+                <w:sz w:val="16"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>التهديدات (Threats)</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="4"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{THREAT_1}}</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="4"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{THREAT_2}}</w:t>
+            </w:r>
+          </w:p>
+          <w:p>
+            <w:pPr>
+              <w:numPr>
+                <w:ilvl w:val="0"/>
+                <w:numId w:val="4"/>
+              </w:numPr>
+            </w:pPr>
+            <w:r>
+              <w:t>{{THREAT_3}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+    </w:tbl>
+
+    <!-- Strategic Recommendations -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+        <w:spacing w:before="480" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="16A34A"/>
+          <w:sz w:val="24"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>2. التوصيات الاستراتيجية الرئيسية</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Recommendation 1 -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading2"/>
+        <w:spacing w:before="240" w:after="120"/>
+        <w:shd w:val="clear" w:color="auto" w:fill="F0FDF4"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="16A34A"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="16A34A"/>
+          <w:sz w:val="20"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>التوصية الأولى: {{RECOMMENDATION_1_TITLE}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الوصف: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{RECOMMENDATION_1_DESCRIPTION}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>المبرر: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{RECOMMENDATION_1_RATIONALE}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="60"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الاستثمار المطلوب: </w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="16A34A"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>{{RECOMMENDATION_1_INVESTMENT}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="60"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الإطار الزمني: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{RECOMMENDATION_1_TIMELINE}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>العائد المتوقع: </w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="16A34A"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>{{RECOMMENDATION_1_ROI}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Recommendation 2 -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading2"/>
+        <w:spacing w:before="240" w:after="120"/>
+        <w:shd w:val="clear" w:color="auto" w:fill="F0F9FF"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="0EA5E9"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="0EA5E9"/>
+          <w:sz w:val="20"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>التوصية الثانية: {{RECOMMENDATION_2_TITLE}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الوصف: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{RECOMMENDATION_2_DESCRIPTION}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>المبرر: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{RECOMMENDATION_2_RATIONALE}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="60"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الاستثمار المطلوب: </w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="0EA5E9"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>{{RECOMMENDATION_2_INVESTMENT}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="60"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الإطار الزمني: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{RECOMMENDATION_2_TIMELINE}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>العائد المتوقع: </w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="0EA5E9"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>{{RECOMMENDATION_2_ROI}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Recommendation 3 -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading2"/>
+        <w:spacing w:before="240" w:after="120"/>
+        <w:shd w:val="clear" w:color="auto" w:fill="FFFBEB"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="F59E0B"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="F59E0B"/>
+          <w:sz w:val="20"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>التوصية الثالثة: {{RECOMMENDATION_3_TITLE}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الوصف: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{RECOMMENDATION_3_DESCRIPTION}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>المبرر: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{RECOMMENDATION_3_RATIONALE}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="60"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الاستثمار المطلوب: </w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="F59E0B"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>{{RECOMMENDATION_3_INVESTMENT}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="60"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الإطار الزمني: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{RECOMMENDATION_3_TIMELINE}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>العائد المتوقع: </w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="F59E0B"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>{{RECOMMENDATION_3_ROI}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Page Break -->
+    <w:p>
+      <w:r>
+        <w:br w:type="page"/>
+      </w:r>
+    </w:p>
+
+    <!-- Implementation Plan -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+        <w:spacing w:before="240" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="7C3AED"/>
+          <w:sz w:val="24"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>3. خطة التنفيذ</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Phase 1 -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading2"/>
+        <w:spacing w:before="240" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="7C3AED"/>
+          <w:sz w:val="18"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>المرحلة الأولى ({{PHASE_1_DURATION}})</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الأهداف: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{PHASE_1_OBJECTIVES}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="80"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الأنشطة الرئيسية:</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="5"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>{{PHASE_1_ACTIVITY_1}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="5"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>{{PHASE_1_ACTIVITY_2}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="5"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>{{PHASE_1_ACTIVITY_3}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Phase 2 -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading2"/>
+        <w:spacing w:before="240" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="7C3AED"/>
+          <w:sz w:val="18"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>المرحلة الثانية ({{PHASE_2_DURATION}})</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الأهداف: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{PHASE_2_OBJECTIVES}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="80"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>الأنشطة الرئيسية:</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="6"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>{{PHASE_2_ACTIVITY_1}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="6"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>{{PHASE_2_ACTIVITY_2}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="6"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>{{PHASE_2_ACTIVITY_3}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Success Metrics -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+        <w:spacing w:before="480" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="16A34A"/>
+          <w:sz w:val="24"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>4. مؤشرات النجاح</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- KPIs Table -->
+    <w:tbl>
+      <w:tblPr>
+        <w:tblStyle w:val="TableGrid"/>
+        <w:tblW w:w="0" w:type="auto"/>
+      </w:tblPr>
+      <w:tblGrid>
+        <w:gridCol w:w="2500"/>
+        <w:gridCol w:w="1500"/>
+        <w:gridCol w:w="1500"/>
+        <w:gridCol w:w="1500"/>
+      </w:tblGrid>
+
+      <!-- Header -->
+      <w:tr>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="16A34A"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="FFFFFF"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>مؤشر الأداء</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="16A34A"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="FFFFFF"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>الوضع الحالي</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="16A34A"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="FFFFFF"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>الهدف ({{TARGET_YEAR}})</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="16A34A"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="FFFFFF"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>تكرار القياس</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+
+      <!-- Rows -->
+      <w:tr>
+        <w:tc>
+          <w:p>
+            <w:r>
+              <w:t>معدل نمو الإيرادات</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>{{CURRENT_REVENUE_GROWTH}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="16A34A"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{TARGET_REVENUE_GROWTH}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>ربعي</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+
+      <w:tr>
+        <w:tc>
+          <w:p>
+            <w:r>
+              <w:t>هامش الربح الصافي</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>{{CURRENT_PROFIT_MARGIN}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="16A34A"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{TARGET_PROFIT_MARGIN}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>شهري</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+
+      <w:tr>
+        <w:tc>
+          <w:p>
+            <w:r>
+              <w:t>الحصة السوقية</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>{{CURRENT_MARKET_SHARE}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="16A34A"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{TARGET_MARKET_SHARE}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>نصف سنوي</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+    </w:tbl>
+
+    <!-- Risk Mitigation -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+        <w:spacing w:before="480" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="DC2626"/>
+          <w:sz w:val="24"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>5. إدارة المخاطر</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+        <w:shd w:val="clear" w:color="auto" w:fill="FEF2F2"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="DC2626"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="DC2626"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>استراتيجيات التخفيف من المخاطر:</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:shd w:val="clear" w:color="auto" w:fill="FEF2F2"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="DC2626"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="7"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>{{RISK_MITIGATION_1}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:shd w:val="clear" w:color="auto" w:fill="FEF2F2"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="DC2626"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="7"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>{{RISK_MITIGATION_2}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:shd w:val="clear" w:color="auto" w:fill="FEF2F2"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="DC2626"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="7"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>{{RISK_MITIGATION_3}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Conclusion -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+        <w:spacing w:before="480" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="0EA5E9"/>
+          <w:sz w:val="24"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>6. الخلاصة</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:t>تُمثل التوصيات المقترحة خارطة طريق شاملة لتحقيق {{STRATEGIC_GOALS_SUMMARY}}. من خلال التنفيذ المرحلي والمراقبة المستمرة للمؤشرات الرئيسية، نتوقع تحقيق {{EXPECTED_OUTCOMES}} خلال {{EXPECTED_TIMELINE}}.</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+        <w:shd w:val="clear" w:color="auto" w:fill="F0F9FF"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="0EA5E9"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="0EA5E9"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>الخطوة التالية: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{NEXT_STEPS}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Footer -->
+    <w:p>
+      <w:pPr>
+        <w:spacing w:before="720"/>
+        <w:jc w:val="center"/>
+        <w:pBdr>
+          <w:top w:val="single" w:sz="4" w:color="E5E7EB"/>
+        </w:pBdr>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="64748B"/>
+          <w:sz w:val="14"/>
+        </w:rPr>
+        <w:t>هذا التقرير معد للاستخدام الداخلي ولا يُسمح بتوزيعه خارج المؤسسة</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="64748B"/>
+          <w:sz w:val="12"/>
+        </w:rPr>
+        <w:t>FinClick.AI Strategic Advisory | strategy@finclick.ai | +966 11 123 4567</w:t>
+      </w:r>
+    </w:p>
+
+  </w:body>
+</w:document>

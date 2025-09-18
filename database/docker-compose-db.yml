@@ -1,0 +1,341 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: finclick-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: finclick_ai_main
+      POSTGRES_USER: finclick_app
+      POSTGRES_PASSWORD: FinClick2024SecurePassword!
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgresql/init:/docker-entrypoint-initdb.d:ro
+      - ./postgresql/schemas:/docker-entrypoint-initdb.d/schemas:ro
+      - ./backups/postgresql:/backups
+    networks:
+      - finclick-db-network
+    command: >
+      postgres
+      -c shared_preload_libraries=pg_stat_statements
+      -c pg_stat_statements.track=all
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c maintenance_work_mem=64MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=4MB
+      -c min_wal_size=1GB
+      -c max_wal_size=4GB
+      -c log_statement=all
+      -c log_min_duration_statement=1000
+      -c log_checkpoints=on
+      -c log_connections=on
+      -c log_disconnections=on
+      -c log_lock_waits=on
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finclick_app -d finclick_ai_main"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: finclick-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: FinClickAdminPassword2024!
+      MONGO_INITDB_DATABASE: finclick_ai
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+      - ./mongodb/init:/docker-entrypoint-initdb.d:ro
+      - ./backups/mongodb:/backups
+    networks:
+      - finclick-db-network
+    command: >
+      mongod
+      --auth
+      --bind_ip_all
+      --journal
+      --wiredTigerCacheSizeGB 0.5
+      --wiredTigerCollectionBlockCompressor snappy
+      --wiredTigerJournalCompressor snappy
+      --wiredTigerIndexPrefixCompression true
+      --logpath /var/log/mongodb/mongod.log
+      --logappend
+      --quiet
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: finclick-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./redis/config/redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - ./backups/redis:/backups
+    networks:
+      - finclick-db-network
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Redis Sentinel for High Availability
+  redis-sentinel:
+    image: redis:7-alpine
+    container_name: finclick-redis-sentinel
+    restart: unless-stopped
+    ports:
+      - "26379:26379"
+    volumes:
+      - redis_sentinel_data:/data
+      - ./redis/config/redis-sentinel.conf:/usr/local/etc/redis/sentinel.conf:ro
+    networks:
+      - finclick-db-network
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "26379", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # pgAdmin for PostgreSQL Management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: finclick-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@finclick.ai
+      PGADMIN_DEFAULT_PASSWORD: FinClickAdmin2024!
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - finclick-db-network
+    depends_on:
+      - postgres
+    profiles:
+      - tools
+
+  # MongoDB Express for MongoDB Management
+  mongo-express:
+    image: mongo-express:latest
+    container_name: finclick-mongo-express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: FinClickAdminPassword2024!
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: FinClickAdmin2024!
+    ports:
+      - "8081:8081"
+    networks:
+      - finclick-db-network
+    depends_on:
+      - mongodb
+    profiles:
+      - tools
+
+  # RedisInsight for Redis Management
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: finclick-redisinsight
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    volumes:
+      - redisinsight_data:/db
+    networks:
+      - finclick-db-network
+    depends_on:
+      - redis
+    profiles:
+      - tools
+
+  # Database Backup Service
+  db-backup:
+    image: alpine:latest
+    container_name: finclick-db-backup
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: finclick_ai_main
+      POSTGRES_USER: finclick_app
+      POSTGRES_PASSWORD: FinClick2024SecurePassword!
+      MONGODB_HOST: mongodb
+      MONGODB_USER: admin
+      MONGODB_PASSWORD: FinClickAdminPassword2024!
+      REDIS_HOST: redis
+      BACKUP_SCHEDULE: "0 2 * * *"  # Daily at 2 AM
+    volumes:
+      - ./backups:/backups
+      - ./scripts/backup.sh:/backup.sh:ro
+    networks:
+      - finclick-db-network
+    depends_on:
+      - postgres
+      - mongodb
+      - redis
+    command: |
+      sh -c "
+        apk add --no-cache postgresql-client mongodb-tools redis dcron &&
+        echo '$$BACKUP_SCHEDULE /backup.sh' | crontab - &&
+        crond -f
+      "
+    profiles:
+      - backup
+
+  # Database Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: finclick-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - finclick-db-network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    profiles:
+      - monitoring
+
+  # Grafana for Database Metrics Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: finclick-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: FinClickAdmin2024!
+      GF_USERS_ALLOW_SIGN_UP: false
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks:
+      - finclick-db-network
+    depends_on:
+      - prometheus
+    profiles:
+      - monitoring
+
+  # PostgreSQL Exporter for Prometheus
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: finclick-postgres-exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "postgresql://finclick_app:FinClick2024SecurePassword!@postgres:5432/finclick_ai_main?sslmode=disable"
+    ports:
+      - "9187:9187"
+    networks:
+      - finclick-db-network
+    depends_on:
+      - postgres
+    profiles:
+      - monitoring
+
+  # MongoDB Exporter for Prometheus
+  mongodb-exporter:
+    image: percona/mongodb_exporter:latest
+    container_name: finclick-mongodb-exporter
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: "mongodb://admin:FinClickAdminPassword2024!@mongodb:27017"
+    ports:
+      - "9216:9216"
+    networks:
+      - finclick-db-network
+    depends_on:
+      - mongodb
+    profiles:
+      - monitoring
+
+  # Redis Exporter for Prometheus
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: finclick-redis-exporter
+    restart: unless-stopped
+    environment:
+      REDIS_ADDR: "redis://redis:6379"
+      REDIS_PASSWORD: "FinClick2024SecureRedisPassword!"
+    ports:
+      - "9121:9121"
+    networks:
+      - finclick-db-network
+    depends_on:
+      - redis
+    profiles:
+      - monitoring
+
+volumes:
+  postgres_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+  redis_data:
+    driver: local
+  redis_sentinel_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  redisinsight_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  finclick-db-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

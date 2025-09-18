@@ -1,0 +1,283 @@
+# FinClick.AI Alerting Rules for Prometheus
+groups:
+  # Application Performance Alerts
+  - name: finclick.application.performance
+    rules:
+      # High Response Time
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 2m
+        labels:
+          severity: warning
+          component: application
+        annotations:
+          summary: "High response time detected"
+          description: "{{ $labels.job }} has 95th percentile response time of {{ $value }}s for more than 2 minutes"
+
+      # High Error Rate
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+        for: 1m
+        labels:
+          severity: critical
+          component: application
+        annotations:
+          summary: "High error rate detected"
+          description: "{{ $labels.job }} error rate is {{ $value | humanizePercentage }} for more than 1 minute"
+
+      # Service Down
+      - alert: ServiceDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: critical
+          component: application
+        annotations:
+          summary: "Service is down"
+          description: "{{ $labels.job }} has been down for more than 30 seconds"
+
+      # High Memory Usage
+      - alert: HighMemoryUsage
+        expr: (container_memory_usage_bytes / container_spec_memory_limit_bytes) > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          component: resources
+        annotations:
+          summary: "High memory usage"
+          description: "{{ $labels.container_label_com_docker_compose_service }} memory usage is {{ $value | humanizePercentage }}"
+
+      # High CPU Usage
+      - alert: HighCPUUsage
+        expr: rate(container_cpu_usage_seconds_total[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          component: resources
+        annotations:
+          summary: "High CPU usage"
+          description: "{{ $labels.container_label_com_docker_compose_service }} CPU usage is {{ $value | humanizePercentage }}"
+
+  # Database Alerts
+  - name: finclick.database
+    rules:
+      # PostgreSQL Connection Issues
+      - alert: PostgreSQLDown
+        expr: pg_up == 0
+        for: 30s
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "PostgreSQL database has been down for more than 30 seconds"
+
+      # PostgreSQL High Connection Usage
+      - alert: PostgreSQLHighConnections
+        expr: pg_stat_database_numbackends / pg_settings_max_connections > 0.8
+        for: 2m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "PostgreSQL high connection usage"
+          description: "PostgreSQL connection usage is {{ $value | humanizePercentage }}"
+
+      # MongoDB Issues
+      - alert: MongoDBDown
+        expr: mongodb_up == 0
+        for: 30s
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "MongoDB is down"
+          description: "MongoDB has been down for more than 30 seconds"
+
+      # Redis Issues
+      - alert: RedisDown
+        expr: redis_up == 0
+        for: 30s
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "Redis is down"
+          description: "Redis has been down for more than 30 seconds"
+
+      # Redis High Memory Usage
+      - alert: RedisHighMemoryUsage
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+        for: 2m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Redis high memory usage"
+          description: "Redis memory usage is {{ $value | humanizePercentage }}"
+
+  # Business Logic Alerts
+  - name: finclick.business
+    rules:
+      # High AI Processing Time
+      - alert: HighAIProcessingTime
+        expr: histogram_quantile(0.95, rate(ai_processing_duration_seconds_bucket[5m])) > 30
+        for: 2m
+        labels:
+          severity: warning
+          component: ai
+        annotations:
+          summary: "High AI processing time"
+          description: "AI processing time 95th percentile is {{ $value }}s"
+
+      # Failed Financial Analysis
+      - alert: HighAnalysisFailureRate
+        expr: rate(financial_analysis_failures_total[5m]) / rate(financial_analysis_total[5m]) > 0.1
+        for: 3m
+        labels:
+          severity: warning
+          component: financial-engine
+        annotations:
+          summary: "High analysis failure rate"
+          description: "Financial analysis failure rate is {{ $value | humanizePercentage }}"
+
+      # Payment Processing Issues
+      - alert: PaymentProcessingFailures
+        expr: increase(payment_failures_total[10m]) > 5
+        for: 0m
+        labels:
+          severity: critical
+          component: payments
+        annotations:
+          summary: "Multiple payment processing failures"
+          description: "{{ $value }} payment failures in the last 10 minutes"
+
+      # User Registration Issues
+      - alert: HighRegistrationFailureRate
+        expr: rate(user_registration_failures_total[5m]) / rate(user_registration_attempts_total[5m]) > 0.2
+        for: 2m
+        labels:
+          severity: warning
+          component: auth
+        annotations:
+          summary: "High user registration failure rate"
+          description: "User registration failure rate is {{ $value | humanizePercentage }}"
+
+  # Infrastructure Alerts
+  - name: finclick.infrastructure
+    rules:
+      # Load Balancer Issues
+      - alert: LoadBalancerDown
+        expr: nginx_up == 0
+        for: 30s
+        labels:
+          severity: critical
+          component: loadbalancer
+        annotations:
+          summary: "Load balancer is down"
+          description: "Nginx load balancer has been down for more than 30 seconds"
+
+      # High Request Rate
+      - alert: HighRequestRate
+        expr: rate(nginx_http_requests_total[5m]) > 1000
+        for: 2m
+        labels:
+          severity: warning
+          component: loadbalancer
+        annotations:
+          summary: "High request rate"
+          description: "Request rate is {{ $value }} requests/second"
+
+      # SSL Certificate Expiry
+      - alert: SSLCertificateExpiry
+        expr: ssl_certificate_expiry_seconds < 86400 * 7
+        for: 0m
+        labels:
+          severity: warning
+          component: security
+        annotations:
+          summary: "SSL certificate expiring soon"
+          description: "SSL certificate will expire in {{ $value | humanizeDuration }}"
+
+      # Disk Space Low
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) < 0.1
+        for: 2m
+        labels:
+          severity: warning
+          component: storage
+        annotations:
+          summary: "Low disk space"
+          description: "Disk space is {{ $value | humanizePercentage }} on {{ $labels.device }}"
+
+  # Security Alerts
+  - name: finclick.security
+    rules:
+      # Suspicious Login Activity
+      - alert: SuspiciousLoginActivity
+        expr: increase(failed_login_attempts_total[5m]) > 10
+        for: 0m
+        labels:
+          severity: warning
+          component: security
+        annotations:
+          summary: "Suspicious login activity detected"
+          description: "{{ $value }} failed login attempts in the last 5 minutes"
+
+      # DDoS Attack Detection
+      - alert: PossibleDDoSAttack
+        expr: rate(nginx_http_requests_total[1m]) > 2000
+        for: 30s
+        labels:
+          severity: critical
+          component: security
+        annotations:
+          summary: "Possible DDoS attack"
+          description: "Very high request rate: {{ $value }} requests/second"
+
+      # Unauthorized API Access
+      - alert: UnauthorizedAPIAccess
+        expr: increase(http_requests_total{status="401"}[5m]) > 20
+        for: 1m
+        labels:
+          severity: warning
+          component: security
+        annotations:
+          summary: "High number of unauthorized API requests"
+          description: "{{ $value }} unauthorized requests in the last 5 minutes"
+
+  # Message Queue Alerts
+  - name: finclick.messaging
+    rules:
+      # RabbitMQ Down
+      - alert: RabbitMQDown
+        expr: rabbitmq_up == 0
+        for: 30s
+        labels:
+          severity: critical
+          component: messaging
+        annotations:
+          summary: "RabbitMQ is down"
+          description: "RabbitMQ message broker has been down for more than 30 seconds"
+
+      # High Queue Length
+      - alert: HighQueueLength
+        expr: rabbitmq_queue_messages > 1000
+        for: 5m
+        labels:
+          severity: warning
+          component: messaging
+        annotations:
+          summary: "High message queue length"
+          description: "Queue {{ $labels.queue }} has {{ $value }} messages"
+
+      # Celery Worker Issues
+      - alert: CeleryWorkerDown
+        expr: celery_worker_up == 0
+        for: 1m
+        labels:
+          severity: warning
+          component: workers
+        annotations:
+          summary: "Celery worker is down"
+          description: "Celery worker {{ $labels.worker }} has been down for more than 1 minute"

@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير تحليل السوق - FinClick.AI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 3px solid #0ea5e9;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .company-info h1 {
+            color: #0ea5e9;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .company-info p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .report-meta {
+            text-align: left;
+            direction: ltr;
+        }
+
+        .report-meta h2 {
+            color: #0ea5e9;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .report-meta .date {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Market Overview */
+        .market-overview {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-right: 4px solid #0ea5e9;
+        }
+
+        .market-overview h3 {
+            color: #0ea5e9;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* Market Metrics */
+        .market-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 3px solid #0ea5e9;
+        }
+
+        .metric-card h4 {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0ea5e9;
+            margin-bottom: 5px;
+        }
+
+        .metric-trend {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .trend-up {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .trend-down {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .trend-stable {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #0ea5e9;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0f2fe;
+        }
+
+        /* Competitor Analysis */
+        .competitor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .competitor-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-right: 3px solid #0ea5e9;
+        }
+
+        .competitor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .competitor-name {
+            color: #0ea5e9;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .market-share {
+            background: #e0f2fe;
+            color: #0ea5e9;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .competitor-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .competitor-metric {
+            background: #f8fafc;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .competitor-metric .label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .competitor-metric .value {
+            font-weight: 600;
+            color: #0ea5e9;
+        }
+
+        /* Market Trends */
+        .trend-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-right: 3px solid #0ea5e9;
+        }
+
+        .trend-item h5 {
+            color: #0ea5e9;
+            margin-bottom: 8px;
+        }
+
+        .trend-item p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .trend-impact {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .impact-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .impact-medium {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .impact-low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* SWOT Analysis */
+        .swot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .swot-quadrant {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .swot-strengths {
+            border-top: 3px solid #16a34a;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        }
+
+        .swot-weaknesses {
+            border-top: 3px solid #dc2626;
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+        }
+
+        .swot-opportunities {
+            border-top: 3px solid #0ea5e9;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+        }
+
+        .swot-threats {
+            border-top: 3px solid #f59e0b;
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+        }
+
+        .swot-quadrant h4 {
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .swot-strengths h4 { color: #16a34a; }
+        .swot-weaknesses h4 { color: #dc2626; }
+        .swot-opportunities h4 { color: #0ea5e9; }
+        .swot-threats h4 { color: #f59e0b; }
+
+        .swot-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .swot-list li {
+            margin-bottom: 8px;
+            padding-right: 20px;
+            position: relative;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .swot-strengths li:before { content: "✓"; color: #16a34a; position: absolute; right: 0; }
+        .swot-weaknesses li:before { content: "✗"; color: #dc2626; position: absolute; right: 0; }
+        .swot-opportunities li:before { content: "★"; color: #0ea5e9; position: absolute; right: 0; }
+        .swot-threats li:before { content: "⚠"; color: #f59e0b; position: absolute; right: 0; }
+
+        /* Market Position */
+        .position-matrix {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            margin: 20px 0;
+            background: #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .matrix-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+            color: white;
+            background: #0ea5e9;
+        }
+
+        .matrix-header {
+            background: #374151;
+        }
+
+        .our-position {
+            background: #16a34a !important;
+            font-weight: 700;
+        }
+
+        /* Tables */
+        .market-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .market-table thead {
+            background: #0ea5e9;
+            color: white;
+        }
+
+        .market-table th,
+        .market-table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #e0f2fe;
+        }
+
+        .market-table tbody tr:hover {
+            background: #f0f9ff;
+        }
+
+        /* Chart placeholder */
+        .chart-container {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .chart-placeholder {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        /* Recommendations */
+        .recommendations {
+            background: #f0fdf4;
+            border-right: 4px solid #16a34a;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .recommendations h4 {
+            color: #16a34a;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-right: 3px solid #16a34a;
+        }
+
+        .recommendation-item h5 {
+            color: #16a34a;
+            margin-bottom: 8px;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 2px solid #e0f2fe;
+            padding-top: 20px;
+            margin-top: 40px;
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        /* Page break for PDF */
+        .page-break {
+            page-break-before: always;
+        }
+
+        @media print {
+            .container {
+                max-width: none;
+                margin: 0;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo">FC</div>
+                <div class="company-info">
+                    <h1>FinClick.AI</h1>
+                    <p>منصة التحليل المالي الذكي</p>
+                </div>
+            </div>
+            <div class="report-meta">
+                <h2>Market Analysis Report</h2>
+                <p class="date">Generated: {{REPORT_DATE}}</p>
+                <p class="date">Market: {{TARGET_MARKET}}</p>
+                <p class="date">Period: {{ANALYSIS_PERIOD}}</p>
+            </div>
+        </header>
+
+        <!-- Market Overview -->
+        <section class="market-overview">
+            <h3>نظرة عامة على السوق</h3>
+            <p>
+                يُظهر تحليل السوق لقطاع {{MARKET_SECTOR}} نمواً بنسبة {{MARKET_GROWTH_RATE}}٪ خلال الفترة المحللة.
+                تقدر قيمة السوق الإجمالية بـ {{TOTAL_MARKET_VALUE}} مع توقعات نمو إيجابية للسنوات القادمة.
+                تشهد الشركة حصة سوقية تبلغ {{COMPANY_MARKET_SHARE}}٪ مما يضعها في موقع {{MARKET_POSITION}} بين المنافسين.
+            </p>
+        </section>
+
+        <!-- Market Metrics -->
+        <section class="section">
+            <h3 class="section-title">مؤشرات السوق الرئيسية</h3>
+            <div class="market-metrics">
+                <div class="metric-card">
+                    <h4>حجم السوق الإجمالي</h4>
+                    <div class="metric-value">{{TOTAL_MARKET_SIZE}}</div>
+                    <span class="metric-trend trend-up">+{{MARKET_SIZE_GROWTH}}%</span>
+                </div>
+                <div class="metric-card">
+                    <h4>معدل النمو السنوي</h4>
+                    <div class="metric-value">{{ANNUAL_GROWTH_RATE}}%</div>
+                    <span class="metric-trend trend-up">مرتفع</span>
+                </div>
+                <div class="metric-card">
+                    <h4>حصتنا السوقية</h4>
+                    <div class="metric-value">{{OUR_MARKET_SHARE}}%</div>
+                    <span class="metric-trend trend-up">+{{SHARE_CHANGE}}%</span>
+                </div>
+                <div class="metric-card">
+                    <h4>عدد المنافسين الرئيسيين</h4>
+                    <div class="metric-value">{{MAIN_COMPETITORS}}</div>
+                    <span class="metric-trend trend-stable">مستقر</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Competitor Analysis -->
+        <section class="section">
+            <h3 class="section-title">تحليل المنافسين</h3>
+            <div class="competitor-grid">
+                <div class="competitor-card">
+                    <div class="competitor-header">
+                        <h4 class="competitor-name">الشركة الرائدة</h4>
+                        <span class="market-share">{{LEADER_MARKET_SHARE}}%</span>
+                    </div>
+                    <div class="competitor-metrics">
+                        <div class="competitor-metric">
+                            <div class="label">الإيرادات</div>
+                            <div class="value">{{LEADER_REVENUE}}</div>
+                        </div>
+                        <div class="competitor-metric">
+                            <div class="label">النمو</div>
+                            <div class="value">{{LEADER_GROWTH}}%</div>
+                        </div>
+                    </div>
+                    <p style="color: #64748b; font-size: 14px;">
+                        قائد السوق الحالي مع قاعدة عملاء واسعة وشبكة توزيع قوية
+                    </p>
+                </div>
+
+                <div class="competitor-card">
+                    <div class="competitor-header">
+                        <h4 class="competitor-name">المنافس المباشر</h4>
+                        <span class="market-share">{{DIRECT_COMPETITOR_SHARE}}%</span>
+                    </div>
+                    <div class="competitor-metrics">
+                        <div class="competitor-metric">
+                            <div class="label">الإيرادات</div>
+                            <div class="value">{{DIRECT_COMPETITOR_REVENUE}}</div>
+                        </div>
+                        <div class="competitor-metric">
+                            <div class="label">النمو</div>
+                            <div class="value">{{DIRECT_COMPETITOR_GROWTH}}%</div>
+                        </div>
+                    </div>
+                    <p style="color: #64748b; font-size: 14px;">
+                        منافس مباشر يستهدف نفس القطاع مع استراتيجية تسعير تنافسية
+                    </p>
+                </div>
+
+                <div class="competitor-card">
+                    <div class="competitor-header">
+                        <h4 class="competitor-name">الداخل الجديد</h4>
+                        <span class="market-share">{{NEW_ENTRANT_SHARE}}%</span>
+                    </div>
+                    <div class="competitor-metrics">
+                        <div class="competitor-metric">
+                            <div class="label">الإيرادات</div>
+                            <div class="value">{{NEW_ENTRANT_REVENUE}}</div>
+                        </div>
+                        <div class="competitor-metric">
+                            <div class="label">النمو</div>
+                            <div class="value">{{NEW_ENTRANT_GROWTH}}%</div>
+                        </div>
+                    </div>
+                    <p style="color: #64748b; font-size: 14px;">
+                        شركة ناشئة تستخدم التكنولوجيا المتقدمة لدخول السوق
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Market Trends -->
+        <section class="section">
+            <h3 class="section-title">اتجاهات السوق</h3>
+
+            <div class="trend-item">
+                <h5>الرقمنة والتحول التكنولوجي</h5>
+                <p>تزايد الطلب على الحلول الرقمية والأتمتة في جميع القطاعات</p>
+                <span class="trend-impact impact-high">تأثير عالي</span>
+            </div>
+
+            <div class="trend-item">
+                <h5>الاستدامة والمسؤولية البيئية</h5>
+                <p>تركيز متزايد على المنتجات والخدمات الصديقة للبيئة</p>
+                <span class="trend-impact impact-medium">تأثير متوسط</span>
+            </div>
+
+            <div class="trend-item">
+                <h5>تغيير سلوك المستهلكين</h5>
+                <p>تحول نحو التسوق الإلكتروني والخدمات حسب الطلب</p>
+                <span class="trend-impact impact-high">تأثير عالي</span>
+            </div>
+
+            <div class="trend-item">
+                <h5>التنظيمات الحكومية الجديدة</h5>
+                <p>تطبيق معايير جديدة للجودة والسلامة في القطاع</p>
+                <span class="trend-impact impact-medium">تأثير متوسط</span>
+            </div>
+        </section>
+
+        <!-- Market Share Chart -->
+        <section class="section">
+            <h3 class="section-title">توزيع الحصص السوقية</h3>
+            <div class="chart-container">
+                <div class="chart-placeholder">
+                    رسم بياني دائري لتوزيع الحصص السوقية<br>
+                    (سيتم إدراج الرسم البياني التفاعلي هنا)
+                </div>
+            </div>
+        </section>
+
+        <div class="page-break"></div>
+
+        <!-- SWOT Analysis -->
+        <section class="section">
+            <h3 class="section-title">تحليل SWOT</h3>
+            <div class="swot-grid">
+                <div class="swot-quadrant swot-strengths">
+                    <h4>نقاط القوة (Strengths)</h4>
+                    <ul class="swot-list">
+                        <li>تقنية متقدمة وحلول مبتكرة</li>
+                        <li>فريق عمل خبير ومتخصص</li>
+                        <li>علاقات قوية مع العملاء</li>
+                        <li>وضع مالي مستقر</li>
+                        <li>سمعة ممتازة في السوق</li>
+                    </ul>
+                </div>
+
+                <div class="swot-quadrant swot-weaknesses">
+                    <h4>نقاط الضعف (Weaknesses)</h4>
+                    <ul class="swot-list">
+                        <li>محدودية الموارد المالية</li>
+                        <li>اعتماد على أسواق محدودة</li>
+                        <li>ضعف في التسويق الرقمي</li>
+                        <li>نقص في التنويع الجغرافي</li>
+                        <li>حاجة لتطوير المنتجات</li>
+                    </ul>
+                </div>
+
+                <div class="swot-quadrant swot-opportunities">
+                    <h4>الفرص (Opportunities)</h4>
+                    <ul class="swot-list">
+                        <li>نمو قوي في السوق المحلي</li>
+                        <li>إمكانية التوسع الإقليمي</li>
+                        <li>تطوير منتجات جديدة</li>
+                        <li>شراكات استراتيجية</li>
+                        <li>الاستفادة من التكنولوجيا</li>
+                    </ul>
+                </div>
+
+                <div class="swot-quadrant swot-threats">
+                    <h4>التهديدات (Threats)</h4>
+                    <ul class="swot-list">
+                        <li>دخول منافسين جدد</li>
+                        <li>تقلبات اقتصادية</li>
+                        <li>تغيرات تنظيمية</li>
+                        <li>زيادة تكاليف التشغيل</li>
+                        <li>تغيير احتياجات العملاء</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Market Position Matrix -->
+        <section class="section">
+            <h3 class="section-title">مصفوفة الموقع السوقي</h3>
+            <div class="position-matrix">
+                <div class="matrix-grid">
+                    <div class="matrix-cell matrix-header">المنافسة / النمو</div>
+                    <div class="matrix-cell matrix-header">نمو عالي</div>
+                    <div class="matrix-cell matrix-header">نمو منخفض</div>
+
+                    <div class="matrix-cell matrix-header">منافسة عالية</div>
+                    <div class="matrix-cell">تحدي</div>
+                    <div class="matrix-cell">صعوبة</div>
+
+                    <div class="matrix-cell matrix-header">منافسة منخفضة</div>
+                    <div class="matrix-cell our-position">موقعنا</div>
+                    <div class="matrix-cell">استقرار</div>
+                </div>
+                <p style="margin-top: 15px; color: #64748b;">
+                    موقعنا الحالي في منطقة النمو العالي مع منافسة منخفضة - موقع مثالي للتوسع
+                </p>
+            </div>
+        </section>
+
+        <!-- Market Forecast -->
+        <section class="section">
+            <h3 class="section-title">توقعات السوق</h3>
+            <table class="market-table">
+                <thead>
+                    <tr>
+                        <th>المؤشر</th>
+                        <th>{{CURRENT_YEAR}}</th>
+                        <th>{{NEXT_YEAR_1}}</th>
+                        <th>{{NEXT_YEAR_2}}</th>
+                        <th>{{NEXT_YEAR_3}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>حجم السوق (مليار ريال)</td>
+                        <td>{{MARKET_SIZE_CURRENT}}</td>
+                        <td>{{MARKET_SIZE_Y1}}</td>
+                        <td>{{MARKET_SIZE_Y2}}</td>
+                        <td>{{MARKET_SIZE_Y3}}</td>
+                    </tr>
+                    <tr>
+                        <td>معدل النمو (%)</td>
+                        <td>{{GROWTH_RATE_CURRENT}}</td>
+                        <td>{{GROWTH_RATE_Y1}}</td>
+                        <td>{{GROWTH_RATE_Y2}}</td>
+                        <td>{{GROWTH_RATE_Y3}}</td>
+                    </tr>
+                    <tr>
+                        <td>حصتنا السوقية (%)</td>
+                        <td>{{OUR_SHARE_CURRENT}}</td>
+                        <td>{{OUR_SHARE_Y1}}</td>
+                        <td>{{OUR_SHARE_Y2}}</td>
+                        <td>{{OUR_SHARE_Y3}}</td>
+                    </tr>
+                    <tr>
+                        <td>عدد العملاء المحتملين</td>
+                        <td>{{POTENTIAL_CUSTOMERS_CURRENT}}</td>
+                        <td>{{POTENTIAL_CUSTOMERS_Y1}}</td>
+                        <td>{{POTENTIAL_CUSTOMERS_Y2}}</td>
+                        <td>{{POTENTIAL_CUSTOMERS_Y3}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Strategic Recommendations -->
+        <section class="section">
+            <h3 class="section-title">التوصيات الاستراتيجية</h3>
+
+            <div class="recommendations">
+                <h4>استراتيجيات النمو المقترحة</h4>
+
+                <div class="recommendation-item">
+                    <h5>التوسع الجغرافي</h5>
+                    <p>استهداف أسواق جديدة في دول الخليج مع التركيز على الإمارات والكويت خلال العامين القادمين</p>
+                </div>
+
+                <div class="recommendation-item">
+                    <h5>تطوير المنتجات</h5>
+                    <p>الاستثمار في البحث والتطوير لإطلاق 3 منتجات جديدة تلبي احتياجات السوق المتغيرة</p>
+                </div>
+
+                <div class="recommendation-item">
+                    <h5>الشراكات الاستراتيجية</h5>
+                    <p>إقامة تحالفات مع الشركات التكنولوجيا لتعزيز القدرات الرقمية والوصول لعملاء جدد</p>
+                </div>
+
+                <div class="recommendation-item">
+                    <h5>الاستحواذ والدمج</h5>
+                    <p>دراسة فرص الاستحواذ على الشركات الصغيرة المتخصصة لتوسيع المحفظة وزيادة الحصة السوقية</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Success Factors -->
+        <section class="section">
+            <h3 class="section-title">عوامل النجاح الحرجة</h3>
+            <div class="market-metrics">
+                <div class="metric-card">
+                    <h4>جودة المنتج</h4>
+                    <div class="metric-value">95%</div>
+                    <span class="metric-trend trend-up">ممتازة</span>
+                </div>
+                <div class="metric-card">
+                    <h4>رضا العملاء</h4>
+                    <div class="metric-value">88%</div>
+                    <span class="metric-trend trend-up">جيد جداً</span>
+                </div>
+                <div class="metric-card">
+                    <h4>الابتكار والتطوير</h4>
+                    <div class="metric-value">75%</div>
+                    <span class="metric-trend trend-stable">يحتاج تحسين</span>
+                </div>
+                <div class="metric-card">
+                    <h4>الكفاءة التشغيلية</h4>
+                    <div class="metric-value">82%</div>
+                    <span class="metric-trend trend-up">جيد</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>تم إنشاء هذا التقرير بواسطة FinClick.AI | تحليل السوق الذكي</p>
+            <p>للاستفسارات: market.analysis@finclick.ai | +966 11 123 4567</p>
+            <p style="margin-top: 10px;">تم استخدام أحدث تقنيات الذكاء الاصطناعي لتحليل البيانات وإنتاج هذا التقرير</p>
+        </footer>
+    </div>
+</body>
+</html>

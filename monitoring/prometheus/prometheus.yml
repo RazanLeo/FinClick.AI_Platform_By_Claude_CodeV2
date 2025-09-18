@@ -1,0 +1,223 @@
+# Prometheus Configuration for FinClick.AI Production
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+  external_labels:
+    cluster: 'finclick-production'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+      timeout: 10s
+      api_version: v2
+
+# Load alerting rules
+rule_files:
+  - "/etc/prometheus/rules/*.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 5s
+
+  # Node Exporter (for system metrics)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets:
+        - 'node-exporter:9100'
+    scrape_interval: 15s
+    metrics_path: /metrics
+
+  # API Gateway instances
+  - job_name: 'api-gateway'
+    static_configs:
+      - targets:
+        - 'api-gateway-1:8000'
+        - 'api-gateway-2:8000'
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+    scrape_timeout: 5s
+    honor_labels: true
+
+  # Authentication Service
+  - job_name: 'auth-service'
+    static_configs:
+      - targets:
+        - 'auth-service-1:3000'
+        - 'auth-service-2:3000'
+    scrape_interval: 15s
+    metrics_path: '/metrics'
+
+  # User Service
+  - job_name: 'user-service'
+    static_configs:
+      - targets:
+        - 'user-service:3000'
+    scrape_interval: 15s
+    metrics_path: '/metrics'
+
+  # Analysis Service
+  - job_name: 'analysis-service'
+    static_configs:
+      - targets:
+        - 'analysis-service:3000'
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+
+  # File Service
+  - job_name: 'file-service'
+    static_configs:
+      - targets:
+        - 'file-service:3000'
+    scrape_interval: 15s
+    metrics_path: '/metrics'
+
+  # Reporting Service
+  - job_name: 'reporting-service'
+    static_configs:
+      - targets:
+        - 'reporting-service:3000'
+    scrape_interval: 15s
+    metrics_path: '/metrics'
+
+  # Notification Service
+  - job_name: 'notification-service'
+    static_configs:
+      - targets:
+        - 'notification-service:3000'
+    scrape_interval: 15s
+    metrics_path: '/metrics'
+
+  # Subscription Service
+  - job_name: 'subscription-service'
+    static_configs:
+      - targets:
+        - 'subscription-service:3000'
+    scrape_interval: 15s
+    metrics_path: '/metrics'
+
+  # AI Orchestrator
+  - job_name: 'ai-orchestrator'
+    static_configs:
+      - targets:
+        - 'ai-orchestrator:3000'
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+
+  # Financial Engine
+  - job_name: 'financial-engine'
+    static_configs:
+      - targets:
+        - 'financial-engine:3000'
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+
+  # Celery Workers
+  - job_name: 'celery-workers'
+    static_configs:
+      - targets:
+        - 'celery-worker-1:9540'
+        - 'celery-worker-2:9540'
+    scrape_interval: 15s
+    metrics_path: '/metrics'
+
+  # PostgreSQL Exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets:
+        - 'postgres-exporter:9187'
+    scrape_interval: 30s
+
+  # MongoDB Exporter
+  - job_name: 'mongodb'
+    static_configs:
+      - targets:
+        - 'mongodb-exporter:9216'
+    scrape_interval: 30s
+
+  # Redis Exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets:
+        - 'redis-exporter:9121'
+    scrape_interval: 30s
+
+  # RabbitMQ Exporter
+  - job_name: 'rabbitmq'
+    static_configs:
+      - targets:
+        - 'rabbitmq:15692'
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  # Nginx Exporter
+  - job_name: 'nginx'
+    static_configs:
+      - targets:
+        - 'nginx-exporter:9113'
+    scrape_interval: 15s
+
+  # Docker Container Metrics (cAdvisor)
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets:
+        - 'cadvisor:8080'
+    scrape_interval: 15s
+    metrics_path: '/metrics'
+
+  # Elasticsearch Exporter
+  - job_name: 'elasticsearch'
+    static_configs:
+      - targets:
+        - 'elasticsearch-exporter:9114'
+    scrape_interval: 30s
+
+  # Grafana Metrics
+  - job_name: 'grafana'
+    static_configs:
+      - targets:
+        - 'grafana:3000'
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  # Custom Business Metrics
+  - job_name: 'business-metrics'
+    static_configs:
+      - targets:
+        - 'api-gateway-1:8000'
+        - 'api-gateway-2:8000'
+    scrape_interval: 30s
+    metrics_path: '/api/metrics/business'
+    honor_labels: true
+
+  # Frontend Performance Metrics (if available)
+  - job_name: 'frontend-metrics'
+    static_configs:
+      - targets:
+        - 'frontend-1:80'
+        - 'frontend-2:80'
+    scrape_interval: 60s
+    metrics_path: '/metrics'
+
+# Remote write configuration (for long-term storage)
+remote_write:
+  - url: "http://victoria-metrics:8428/api/v1/write"
+    queue_config:
+      max_samples_per_send: 10000
+      capacity: 20000
+      max_shards: 200
+
+# Storage configuration
+storage:
+  tsdb:
+    retention.time: 30d
+    retention.size: 10GB
+    wal-compression: true

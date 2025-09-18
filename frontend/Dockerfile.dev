@@ -1,0 +1,78 @@
+# Development Dockerfile for FinClick.AI Frontend
+# Optimized for fast development workflow with hot reloading
+
+# Stage 1: Development Dependencies
+FROM node:18-alpine AS development
+
+# Set development environment
+ENV NODE_ENV=development
+ENV FAST_REFRESH=true
+ENV CHOKIDAR_USEPOLLING=true
+ENV WATCHPACK_POLLING=true
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies for development
+RUN apk add --no-cache \
+    git \
+    python3 \
+    make \
+    g++ \
+    curl \
+    bash \
+    && rm -rf /var/cache/apk/*
+
+# Create non-root user for development
+RUN addgroup -g 1001 -S appuser && \
+    adduser -S -D -H -u 1001 -h /app -s /bin/bash -G appuser -g appuser appuser
+
+# Copy package files
+COPY --chown=appuser:appuser package*.json ./
+COPY --chown=appuser:appuser yarn.lock* ./
+
+# Install all dependencies (including dev dependencies)
+RUN if [ -f yarn.lock ]; then \
+        yarn install --frozen-lockfile; \
+    else \
+        npm ci; \
+    fi
+
+# Copy source code
+COPY --chown=appuser:appuser . .
+
+# Create cache directory
+RUN mkdir -p /app/.cache && chown -R appuser:appuser /app/.cache
+
+# Expose ports
+EXPOSE 3000 3001
+
+# Add labels
+LABEL maintainer="FinClick.AI Team" \
+      version="1.0.0-dev" \
+      description="FinClick.AI Frontend Development Image" \
+      environment="development"
+
+# Health check for development
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:3000 || exit 1
+
+# Switch to non-root user
+USER appuser
+
+# Start development server
+CMD ["npm", "start"]
+
+# Stage 2: Webpack Development Server (for advanced development setup)
+FROM development AS webpack-dev
+
+# Install additional development tools
+USER root
+RUN npm install -g webpack-dev-server @webpack-cli/serve
+USER appuser
+
+# Expose webpack dev server port
+EXPOSE 3002
+
+# Start webpack dev server
+CMD ["npm", "run", "start:webpack"]

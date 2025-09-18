@@ -1,0 +1,50 @@
+# Grafana Datasource Configuration for FinClick.AI Monitoring
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      httpMethod: POST
+      queryTimeout: 60s
+      timeInterval: 30s
+      prometheusType: Prometheus
+      prometheusVersion: 2.40.0
+      cacheLevel: 'High'
+      disableMetricsLookup: false
+      customQueryParameters: ''
+      incrementalQueryOverlapWindow: 10m
+
+  - name: PostgreSQL
+    type: postgres
+    access: proxy
+    url: postgres:5432
+    database: finclick_ai_main
+    user: finclick_app
+    secureJsonData:
+      password: FinClick2024SecurePassword!
+    jsonData:
+      sslmode: disable
+      maxOpenConns: 100
+      maxIdleConns: 100
+      maxIdleConnsAuto: true
+      connMaxLifetime: 14400
+      postgresVersion: 1500
+      timescaledb: false
+
+  - name: MongoDB
+    type: grafana-mongodb-datasource
+    access: proxy
+    url: mongodb://mongodb:27017
+    database: finclick_ai
+    user: admin
+    secureJsonData:
+      password: FinClickAdminPassword2024!
+    jsonData:
+      authenticationDatabase: admin
+      ssl: false

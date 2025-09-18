@@ -1,0 +1,905 @@
+version: '3.8'
+
+services:
+  # Nginx Load Balancer & SSL Termination (Staging)
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: finclick-nginx-staging
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.staging.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - nginx_staging_logs:/var/log/nginx
+    depends_on:
+      - frontend
+      - api-gateway
+    networks:
+      - staging-frontend
+      - staging-backend
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  # Frontend - React.js (Staging)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.staging
+      target: staging
+    container_name: finclick-frontend-staging
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - REACT_APP_API_URL=https://staging-api.finclick.ai
+      - REACT_APP_ENVIRONMENT=staging
+      - REACT_APP_VERSION=${APP_VERSION:-1.0.0}
+      - REACT_APP_SENTRY_DSN=${SENTRY_DSN}
+      - REACT_APP_ANALYTICS_ID=${ANALYTICS_ID}
+    networks:
+      - staging-frontend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # API Gateway (Staging)
+  api-gateway:
+    build:
+      context: ./backend/api-gateway
+      dockerfile: Dockerfile.staging
+    container_name: finclick-api-gateway-staging
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - PORT=8000
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - MONGODB_URL=mongodb://mongo:27017/${MONGO_DB}
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_EXPIRES_IN=24h
+      - RATE_LIMIT_MAX=5000
+      - RATE_LIMIT_WINDOW=15
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # Authentication Service (Staging)
+  auth-service:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile.staging
+    container_name: finclick-auth-staging
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - BCRYPT_ROUNDS=10
+      - SESSION_TIMEOUT=1800
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # User Service (Staging)
+  user-service:
+    build:
+      context: ./backend/user-service
+      dockerfile: Dockerfile.staging
+    container_name: finclick-user-staging
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://redis:6379
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # Analysis Service (Staging)
+  analysis-service:
+    build:
+      context: ./backend/analysis-service
+      dockerfile: Dockerfile.staging
+    container_name: finclick-analysis-staging
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - MONGODB_URL=mongodb://mongo:27017/${MONGO_DB}
+      - REDIS_URL=redis://redis:6379
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # File Service (Staging)
+  file-service:
+    build:
+      context: ./backend/file-service
+      dockerfile: Dockerfile.staging
+    container_name: finclick-file-staging
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET_STAGING}
+      - AWS_REGION=${AWS_REGION}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=info
+    volumes:
+      - staging_file_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # Reporting Service (Staging)
+  reporting-service:
+    build:
+      context: ./backend/reporting-service
+      dockerfile: Dockerfile.staging
+    container_name: finclick-reporting-staging
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - MONGODB_URL=mongodb://mongo:27017/${MONGO_DB}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET_STAGING}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=info
+    volumes:
+      - ./reports-templates:/app/templates:ro
+      - staging_report_cache:/app/cache
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # Notification Service (Staging)
+  notification-service:
+    build:
+      context: ./backend/notification-service
+      dockerfile: Dockerfile.staging
+    container_name: finclick-notification-staging
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://redis:6379
+      - SMTP_HOST=${SMTP_HOST_STAGING}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME_STAGING}
+      - SMTP_PASSWORD=${SMTP_PASSWORD_STAGING}
+      - SMTP_SECURE=true
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # Subscription Service (Staging)
+  subscription-service:
+    build:
+      context: ./backend/subscription-service
+      dockerfile: Dockerfile.staging
+    container_name: finclick-subscription-staging
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY_TEST}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET_TEST}
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID_SANDBOX}
+      - PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET_SANDBOX}
+      - PAYPAL_MODE=sandbox
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # AI Agents Orchestrator (Staging)
+  ai-orchestrator:
+    build:
+      context: ./ai-agents
+      dockerfile: Dockerfile.staging
+    container_name: finclick-ai-staging
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - MONGODB_URL=mongodb://mongo:27017/${MONGO_DB}
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - FMP_API_KEY=${FMP_API_KEY}
+      - AI_RATE_LIMIT=500
+      - AI_TIMEOUT=30000
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+
+  # Financial Analysis Engine (Staging)
+  financial-engine:
+    build:
+      context: ./financial-engine
+      dockerfile: Dockerfile.staging
+    container_name: finclick-financial-staging
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - MONGODB_URL=mongodb://mongo:27017/${MONGO_DB}
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+      - FMP_API_KEY=${FMP_API_KEY}
+      - ALPHA_VANTAGE_API_KEY=${ALPHA_VANTAGE_API_KEY}
+      - QUANDL_API_KEY=${QUANDL_API_KEY}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=info
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+
+  # Celery Worker (Staging)
+  celery-worker:
+    build:
+      context: ./financial-engine
+      dockerfile: Dockerfile.staging
+    container_name: finclick-celery-staging
+    restart: unless-stopped
+    command: celery -A financial_engine.celery worker --loglevel=info --concurrency=2 --queues=analysis,reports,notifications
+    environment:
+      - NODE_ENV=staging
+      - MONGODB_URL=mongodb://mongo:27017/${MONGO_DB}
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+      - CELERY_WORKER_HIJACK_ROOT_LOGGER=false
+      - CELERY_WORKER_LOG_COLOR=false
+      - SENTRY_DSN=${SENTRY_DSN}
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    healthcheck:
+      test: ["CMD", "celery", "-A", "financial_engine.celery", "inspect", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # Celery Beat Scheduler (Staging)
+  celery-beat:
+    build:
+      context: ./financial-engine
+      dockerfile: Dockerfile.staging
+    container_name: finclick-beat-staging
+    restart: unless-stopped
+    command: celery -A financial_engine.celery beat --loglevel=info --pidfile=/tmp/celerybeat.pid
+    environment:
+      - NODE_ENV=staging
+      - MONGODB_URL=mongodb://mongo:27017/${MONGO_DB}
+      - REDIS_URL=redis://redis:6379
+      - CELERY_BEAT_SCHEDULE_FILENAME=/app/celerybeat-schedule
+      - SENTRY_DSN=${SENTRY_DSN}
+    volumes:
+      - staging_celery_data:/app
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    networks:
+      - staging-backend
+      - staging-database
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.2'
+
+  # PostgreSQL Database (Staging)
+  postgres:
+    image: postgres:15-alpine
+    container_name: finclick-postgres-staging
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--auth-host=md5
+    command: |
+      postgres
+      -c shared_preload_libraries=pg_stat_statements
+      -c pg_stat_statements.track=all
+      -c log_statement=ddl
+      -c log_min_duration_statement=5000
+      -c max_connections=200
+      -c work_mem=4MB
+    volumes:
+      - postgres_staging_data:/var/lib/postgresql/data
+      - ./database/sql:/docker-entrypoint-initdb.d:ro
+      - postgres_staging_logs:/var/log/postgresql
+    networks:
+      - staging-database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # MongoDB Database (Staging)
+  mongo:
+    image: mongo:6.0
+    container_name: finclick-mongo-staging
+    restart: unless-stopped
+    command: mongod --bind_ip_all --auth
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DB}
+    volumes:
+      - mongo_staging_data:/data/db
+      - mongo_staging_config:/data/configdb
+      - ./database/mongo/init.js:/docker-entrypoint-initdb.d/init.js:ro
+      - mongo_staging_logs:/var/log/mongodb
+    networks:
+      - staging-database
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # Redis Cache (Staging)
+  redis:
+    image: redis:7-alpine
+    container_name: finclick-redis-staging
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_staging_data:/data
+      - ./database/redis/redis.staging.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - staging-database
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # RabbitMQ Message Broker (Staging)
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: finclick-rabbitmq-staging
+    restart: unless-stopped
+    hostname: rabbitmq-staging
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+      - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=0.6
+      - RABBITMQ_DISK_FREE_LIMIT=1GB
+    volumes:
+      - rabbitmq_staging_data:/var/lib/rabbitmq
+      - ./database/rabbitmq/rabbitmq.staging.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    networks:
+      - staging-database
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # Monitoring - Prometheus (Staging)
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: finclick-prometheus-staging
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=15d'
+      - '--storage.tsdb.retention.size=5GB'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./monitoring/prometheus/prometheus.staging.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/rules:/etc/prometheus/rules:ro
+      - prometheus_staging_data:/prometheus
+    networks:
+      - staging-monitoring
+      - staging-backend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # Monitoring - Grafana (Staging)
+  grafana:
+    image: grafana/grafana:10.0.0
+    container_name: finclick-grafana-staging
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      - GF_SECURITY_SECRET_KEY=${GRAFANA_SECRET_KEY}
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel
+      - GF_SERVER_DOMAIN=staging-grafana.finclick.ai
+      - GF_SERVER_ROOT_URL=https://staging-grafana.finclick.ai
+    volumes:
+      - grafana_staging_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    networks:
+      - staging-monitoring
+      - staging-backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # Elasticsearch (Staging)
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    container_name: finclick-elasticsearch-staging
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+    volumes:
+      - elasticsearch_staging_data:/usr/share/elasticsearch/data
+      - ./monitoring/elasticsearch/elasticsearch.staging.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    networks:
+      - staging-monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-u", "elastic:${ELASTIC_PASSWORD}", "-f", "http://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # Logstash (Staging)
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.9.0
+    container_name: finclick-logstash-staging
+    restart: unless-stopped
+    environment:
+      - LS_JAVA_OPTS=-Xms256m -Xmx256m
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    volumes:
+      - ./monitoring/logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./monitoring/logstash/config:/usr/share/logstash/config:ro
+      - logstash_staging_data:/usr/share/logstash/data
+      - nginx_staging_logs:/var/log/nginx:ro
+      - postgres_staging_logs:/var/log/postgresql:ro
+      - mongo_staging_logs:/var/log/mongodb:ro
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - staging-monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9600/_node/stats"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # Kibana (Staging)
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.9.0
+    container_name: finclick-kibana-staging
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+      - SERVER_NAME=staging-kibana.finclick.ai
+      - SERVER_PUBLICBASEURL=https://staging-kibana.finclick.ai
+    volumes:
+      - kibana_staging_data:/usr/share/kibana/data
+      - ./monitoring/kibana/kibana.staging.yml:/usr/share/kibana/config/kibana.yml:ro
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - staging-monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5601/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # AlertManager (Staging)
+  alertmanager:
+    image: prom/alertmanager:v0.25.0
+    container_name: finclick-alertmanager-staging
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=https://staging-alerts.finclick.ai'
+    volumes:
+      - ./monitoring/alertmanager/alertmanager.staging.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager_staging_data:/alertmanager
+    depends_on:
+      - prometheus
+    networks:
+      - staging-monitoring
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.1'
+
+  # Testing Service for E2E Tests
+  e2e-tests:
+    build:
+      context: ./tests/e2e
+      dockerfile: Dockerfile
+    container_name: finclick-e2e-tests
+    environment:
+      - NODE_ENV=staging
+      - BASE_URL=https://staging.finclick.ai
+      - API_URL=https://staging-api.finclick.ai
+      - TEST_USER_EMAIL=${TEST_USER_EMAIL}
+      - TEST_USER_PASSWORD=${TEST_USER_PASSWORD}
+      - HEADLESS=true
+    volumes:
+      - ./tests/e2e:/app
+      - e2e_results:/app/results
+      - e2e_screenshots:/app/screenshots
+    depends_on:
+      - frontend
+      - api-gateway
+    networks:
+      - staging-frontend
+    profiles:
+      - testing
+    command: npm run test:e2e
+
+  # Load Testing Service
+  load-testing:
+    image: loadimpact/k6:latest
+    container_name: finclick-load-testing
+    environment:
+      - BASE_URL=https://staging-api.finclick.ai
+      - VUS=10
+      - DURATION=30s
+    volumes:
+      - ./tests/load:/scripts
+      - load_test_results:/results
+    depends_on:
+      - api-gateway
+    networks:
+      - staging-backend
+    profiles:
+      - testing
+    command: k6 run --out json=/results/load-test-results.json /scripts/load-test.js
+
+volumes:
+  # Application Data
+  staging_file_uploads:
+  staging_report_cache:
+  staging_celery_data:
+
+  # Database Data
+  postgres_staging_data:
+  mongo_staging_data:
+  mongo_staging_config:
+  redis_staging_data:
+  rabbitmq_staging_data:
+
+  # Monitoring Data
+  prometheus_staging_data:
+  grafana_staging_data:
+  elasticsearch_staging_data:
+  logstash_staging_data:
+  kibana_staging_data:
+  alertmanager_staging_data:
+
+  # Logs
+  nginx_staging_logs:
+  postgres_staging_logs:
+  mongo_staging_logs:
+
+  # Testing Data
+  e2e_results:
+  e2e_screenshots:
+  load_test_results:
+
+networks:
+  staging-frontend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.1.0/24
+  staging-backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.2.0/24
+  staging-database:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.3.0/24
+  staging-monitoring:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.4.0/24
+
+# Staging-specific configurations
+x-staging-variables: &staging-variables
+  TZ: UTC
+  LANG: en_US.UTF-8
+  LC_ALL: en_US.UTF-8
+
+x-staging-logging: &staging-logging
+  driver: "json-file"
+  options:
+    max-size: "50m"
+    max-file: "3"
+    labels: "service,version,environment"
+
+x-staging-security: &staging-security-opts
+  security_opt:
+    - no-new-privileges:true
+  read_only: false
+
+# Health check configurations
+x-common-healthcheck: &common-healthcheck
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 40s

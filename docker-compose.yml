@@ -1,0 +1,225 @@
+version: '3.8'
+
+services:
+  # Frontend - React.js Application
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_ENVIRONMENT=development
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - api-gateway
+
+  # API Gateway - Main entry point
+  api-gateway:
+    build: ./backend/api-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://finclick:finclick123@postgres:5432/finclick_db
+      - MONGODB_URL=mongodb://mongo:27017/finclick_mongo
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - FMP_API_KEY=${FMP_API_KEY}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+    depends_on:
+      - postgres
+      - mongo
+      - redis
+      - rabbitmq
+
+  # Authentication Service
+  auth-service:
+    build: ./backend/auth-service
+    environment:
+      - DATABASE_URL=postgresql://finclick:finclick123@postgres:5432/finclick_db
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    depends_on:
+      - postgres
+      - redis
+
+  # Subscription Service
+  subscription-service:
+    build: ./backend/subscription-service
+    environment:
+      - DATABASE_URL=postgresql://finclick:finclick123@postgres:5432/finclick_db
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
+      - PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET}
+    depends_on:
+      - postgres
+
+  # AI Agents Orchestrator
+  ai-orchestrator:
+    build: ./ai-agents
+    environment:
+      - DATABASE_URL=postgresql://finclick:finclick123@postgres:5432/finclick_db
+      - MONGODB_URL=mongodb://mongo:27017/finclick_mongo
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - FMP_API_KEY=${FMP_API_KEY}
+    depends_on:
+      - postgres
+      - mongo
+      - redis
+      - rabbitmq
+
+  # Financial Analysis Engine
+  financial-engine:
+    build: ./financial-engine
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/finclick_mongo
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - mongo
+      - redis
+      - rabbitmq
+
+  # Report Generation Service
+  report-service:
+    build: ./backend/report-service
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/finclick_mongo
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+    volumes:
+      - ./reports-templates:/app/templates
+    depends_on:
+      - mongo
+
+  # Notification Service
+  notification-service:
+    build: ./backend/notification-service
+    environment:
+      - DATABASE_URL=postgresql://finclick:finclick123@postgres:5432/finclick_db
+      - REDIS_URL=redis://redis:6379
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+    depends_on:
+      - postgres
+      - redis
+
+  # Celery Worker for Analysis
+  celery-worker:
+    build: ./financial-engine
+    command: celery -A financial_engine.celery worker --loglevel=info --concurrency=4
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/finclick_mongo
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - redis
+      - rabbitmq
+      - mongo
+
+  # Celery Beat for Scheduled Tasks
+  celery-beat:
+    build: ./financial-engine
+    command: celery -A financial_engine.celery beat --loglevel=info
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/finclick_mongo
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+      - mongo
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=finclick_db
+      - POSTGRES_USER=finclick
+      - POSTGRES_PASSWORD=finclick123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/sql:/docker-entrypoint-initdb.d
+
+  # MongoDB Database
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./database/mongo:/docker-entrypoint-initdb.d
+
+  # Redis Cache & Session Store
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # RabbitMQ Message Broker
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infrastructure/nginx.conf:/etc/nginx/nginx.conf
+      - ./infrastructure/ssl:/etc/nginx/ssl
+    depends_on:
+      - frontend
+      - api-gateway
+
+  # Monitoring - Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infrastructure/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+
+  # Monitoring - Grafana
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./infrastructure/grafana:/etc/grafana/provisioning
+
+volumes:
+  postgres_data:
+  mongo_data:
+  redis_data:
+  rabbitmq_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  default:
+    name: finclick-network

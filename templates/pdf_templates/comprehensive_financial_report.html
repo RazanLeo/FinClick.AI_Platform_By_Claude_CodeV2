@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير مالي شامل - FinClick.AI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 3px solid #1e40af;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .company-info h1 {
+            color: #1e40af;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .company-info p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .report-meta {
+            text-align: left;
+            direction: ltr;
+        }
+
+        .report-meta h2 {
+            color: #1e40af;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .report-meta .date {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Executive Summary */
+        .executive-summary {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-right: 4px solid #1e40af;
+        }
+
+        .executive-summary h3 {
+            color: #1e40af;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* Financial Metrics Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 3px solid #1e40af;
+        }
+
+        .metric-card h4 {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 5px;
+        }
+
+        .metric-change {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .positive {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .negative {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #1e40af;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        /* Tables */
+        .financial-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .financial-table thead {
+            background: #1e40af;
+            color: white;
+        }
+
+        .financial-table th,
+        .financial-table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .financial-table th {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .financial-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .financial-table .amount {
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        /* Chart placeholder */
+        .chart-container {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .chart-placeholder {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        /* Key Insights */
+        .insights {
+            background: #fffbeb;
+            border-right: 4px solid #f59e0b;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .insights h4 {
+            color: #f59e0b;
+            margin-bottom: 10px;
+        }
+
+        .insights ul {
+            list-style: none;
+            padding-right: 0;
+        }
+
+        .insights li {
+            margin-bottom: 8px;
+            padding-right: 20px;
+            position: relative;
+        }
+
+        .insights li:before {
+            content: "●";
+            color: #f59e0b;
+            position: absolute;
+            right: 0;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 2px solid #e2e8f0;
+            padding-top: 20px;
+            margin-top: 40px;
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        /* Page break for PDF */
+        .page-break {
+            page-break-before: always;
+        }
+
+        @media print {
+            .container {
+                max-width: none;
+                margin: 0;
+                padding: 15px;
+            }
+
+            .header {
+                margin-bottom: 20px;
+            }
+
+            .section {
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo">FC</div>
+                <div class="company-info">
+                    <h1>FinClick.AI</h1>
+                    <p>منصة التحليل المالي الذكي</p>
+                </div>
+            </div>
+            <div class="report-meta">
+                <h2>Comprehensive Financial Report</h2>
+                <p class="date">Generated: {{REPORT_DATE}}</p>
+                <p class="date">Period: {{REPORT_PERIOD}}</p>
+            </div>
+        </header>
+
+        <!-- Executive Summary -->
+        <section class="executive-summary">
+            <h3>الملخص التنفيذي</h3>
+            <p>
+                يقدم هذا التقرير تحليلاً شاملاً للوضع المالي للشركة خلال الفترة {{REPORT_PERIOD}}.
+                تُظهر النتائج أداءً {{PERFORMANCE_INDICATOR}} مقارنة بالفترة السابقة، مع تحقيق نمو في الإيرادات بنسبة {{REVENUE_GROWTH}}٪
+                وتحسن في هوامش الربح بنسبة {{PROFIT_MARGIN_IMPROVEMENT}}٪.
+            </p>
+        </section>
+
+        <!-- Key Financial Metrics -->
+        <section class="section">
+            <h3 class="section-title">المؤشرات المالية الرئيسية</h3>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h4>إجمالي الإيرادات</h4>
+                    <div class="metric-value">{{TOTAL_REVENUE}}</div>
+                    <span class="metric-change positive">+{{REVENUE_CHANGE}}%</span>
+                </div>
+                <div class="metric-card">
+                    <h4>صافي الربح</h4>
+                    <div class="metric-value">{{NET_PROFIT}}</div>
+                    <span class="metric-change positive">+{{PROFIT_CHANGE}}%</span>
+                </div>
+                <div class="metric-card">
+                    <h4>هامش الربح</h4>
+                    <div class="metric-value">{{PROFIT_MARGIN}}%</div>
+                    <span class="metric-change positive">+{{MARGIN_CHANGE}}%</span>
+                </div>
+                <div class="metric-card">
+                    <h4>العائد على الاستثمار</h4>
+                    <div class="metric-value">{{ROI}}%</div>
+                    <span class="metric-change positive">+{{ROI_CHANGE}}%</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Income Statement -->
+        <section class="section">
+            <h3 class="section-title">قائمة الدخل</h3>
+            <table class="financial-table">
+                <thead>
+                    <tr>
+                        <th>البيان</th>
+                        <th>{{CURRENT_YEAR}}</th>
+                        <th>{{PREVIOUS_YEAR}}</th>
+                        <th>التغيير (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الإيرادات</td>
+                        <td class="amount">{{REVENUE_CURRENT}}</td>
+                        <td class="amount">{{REVENUE_PREVIOUS}}</td>
+                        <td class="positive">{{REVENUE_CHANGE}}%</td>
+                    </tr>
+                    <tr>
+                        <td>تكلفة البضاعة المباعة</td>
+                        <td class="amount">{{COGS_CURRENT}}</td>
+                        <td class="amount">{{COGS_PREVIOUS}}</td>
+                        <td class="negative">{{COGS_CHANGE}}%</td>
+                    </tr>
+                    <tr>
+                        <td>إجمالي الربح</td>
+                        <td class="amount">{{GROSS_PROFIT_CURRENT}}</td>
+                        <td class="amount">{{GROSS_PROFIT_PREVIOUS}}</td>
+                        <td class="positive">{{GROSS_PROFIT_CHANGE}}%</td>
+                    </tr>
+                    <tr>
+                        <td>المصروفات التشغيلية</td>
+                        <td class="amount">{{OPERATING_EXPENSES_CURRENT}}</td>
+                        <td class="amount">{{OPERATING_EXPENSES_PREVIOUS}}</td>
+                        <td class="negative">{{OPERATING_EXPENSES_CHANGE}}%</td>
+                    </tr>
+                    <tr>
+                        <td>الربح التشغيلي</td>
+                        <td class="amount">{{OPERATING_PROFIT_CURRENT}}</td>
+                        <td class="amount">{{OPERATING_PROFIT_PREVIOUS}}</td>
+                        <td class="positive">{{OPERATING_PROFIT_CHANGE}}%</td>
+                    </tr>
+                    <tr>
+                        <td>صافي الربح</td>
+                        <td class="amount">{{NET_PROFIT_CURRENT}}</td>
+                        <td class="amount">{{NET_PROFIT_PREVIOUS}}</td>
+                        <td class="positive">{{NET_PROFIT_CHANGE}}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Revenue Analysis Chart -->
+        <section class="section">
+            <h3 class="section-title">تحليل الإيرادات</h3>
+            <div class="chart-container">
+                <div class="chart-placeholder">
+                    رسم بياني لتطور الإيرادات<br>
+                    (سيتم إدراج الرسم البياني التفاعلي هنا)
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Insights -->
+        <section class="section">
+            <h3 class="section-title">النتائج الرئيسية</h3>
+            <div class="insights">
+                <h4>نقاط القوة:</h4>
+                <ul>
+                    <li>نمو قوي في الإيرادات بنسبة {{REVENUE_GROWTH}}٪ مقارنة بالعام السابق</li>
+                    <li>تحسن في كفاءة التشغيل وخفض التكاليف</li>
+                    <li>زيادة في حصة السوق والعملاء الجدد</li>
+                    <li>تحسن في التدفق النقدي التشغيلي</li>
+                </ul>
+            </div>
+
+            <div class="insights" style="background: #fef2f2; border-right-color: #dc2626;">
+                <h4 style="color: #dc2626;">التحديات:</h4>
+                <ul>
+                    <li>زيادة في تكاليف المواد الخام</li>
+                    <li>ضغوط تنافسية في السوق</li>
+                    <li>تقلبات في أسعار صرف العملات</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="page-break"></div>
+
+        <!-- Balance Sheet -->
+        <section class="section">
+            <h3 class="section-title">الميزانية العمومية</h3>
+            <table class="financial-table">
+                <thead>
+                    <tr>
+                        <th>البيان</th>
+                        <th>{{CURRENT_YEAR}}</th>
+                        <th>{{PREVIOUS_YEAR}}</th>
+                        <th>التغيير (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="4" style="background: #f1f5f9; font-weight: bold;">الأصول</td></tr>
+                    <tr>
+                        <td>الأصول المتداولة</td>
+                        <td class="amount">{{CURRENT_ASSETS}}</td>
+                        <td class="amount">{{CURRENT_ASSETS_PREV}}</td>
+                        <td class="positive">{{CURRENT_ASSETS_CHANGE}}%</td>
+                    </tr>
+                    <tr>
+                        <td>الأصول الثابتة</td>
+                        <td class="amount">{{FIXED_ASSETS}}</td>
+                        <td class="amount">{{FIXED_ASSETS_PREV}}</td>
+                        <td class="positive">{{FIXED_ASSETS_CHANGE}}%</td>
+                    </tr>
+                    <tr>
+                        <td>إجمالي الأصول</td>
+                        <td class="amount">{{TOTAL_ASSETS}}</td>
+                        <td class="amount">{{TOTAL_ASSETS_PREV}}</td>
+                        <td class="positive">{{TOTAL_ASSETS_CHANGE}}%</td>
+                    </tr>
+                    <tr><td colspan="4" style="background: #f1f5f9; font-weight: bold;">الخصوم وحقوق الملكية</td></tr>
+                    <tr>
+                        <td>الخصوم المتداولة</td>
+                        <td class="amount">{{CURRENT_LIABILITIES}}</td>
+                        <td class="amount">{{CURRENT_LIABILITIES_PREV}}</td>
+                        <td class="negative">{{CURRENT_LIABILITIES_CHANGE}}%</td>
+                    </tr>
+                    <tr>
+                        <td>الخصوم طويلة الأجل</td>
+                        <td class="amount">{{LONG_TERM_LIABILITIES}}</td>
+                        <td class="amount">{{LONG_TERM_LIABILITIES_PREV}}</td>
+                        <td class="negative">{{LONG_TERM_LIABILITIES_CHANGE}}%</td>
+                    </tr>
+                    <tr>
+                        <td>حقوق الملكية</td>
+                        <td class="amount">{{EQUITY}}</td>
+                        <td class="amount">{{EQUITY_PREV}}</td>
+                        <td class="positive">{{EQUITY_CHANGE}}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Financial Ratios -->
+        <section class="section">
+            <h3 class="section-title">النسب المالية</h3>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h4>نسبة السيولة السريعة</h4>
+                    <div class="metric-value">{{QUICK_RATIO}}</div>
+                    <span class="metric-change positive">صحية</span>
+                </div>
+                <div class="metric-card">
+                    <h4>نسبة الدين إلى حقوق الملكية</h4>
+                    <div class="metric-value">{{DEBT_TO_EQUITY}}</div>
+                    <span class="metric-change positive">منخفضة</span>
+                </div>
+                <div class="metric-card">
+                    <h4>معدل دوران المخزون</h4>
+                    <div class="metric-value">{{INVENTORY_TURNOVER}}</div>
+                    <span class="metric-change positive">كفء</span>
+                </div>
+                <div class="metric-card">
+                    <h4>العائد على الأصول</h4>
+                    <div class="metric-value">{{ROA}}%</div>
+                    <span class="metric-change positive">ممتاز</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommendations -->
+        <section class="section">
+            <h3 class="section-title">التوصيات الاستراتيجية</h3>
+            <div class="insights">
+                <h4>التوصيات قصيرة المدى:</h4>
+                <ul>
+                    <li>تحسين إدارة المخزون لتقليل التكاليف</li>
+                    <li>تسريع عمليات تحصيل الذمم المدينة</li>
+                    <li>مراجعة هيكل التكاليف التشغيلية</li>
+                </ul>
+            </div>
+
+            <div class="insights" style="background: #f0f9ff; border-right-color: #0ea5e9;">
+                <h4 style="color: #0ea5e9;">التوصيات طويلة المدى:</h4>
+                <ul>
+                    <li>الاستثمار في التكنولوجيا والأتمتة</li>
+                    <li>توسيع الأسواق الجغرافية</li>
+                    <li>تطوير منتجات وخدمات جديدة</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>تم إنشاء هذا التقرير بواسطة FinClick.AI | جميع الحقوق محفوظة © 2024</p>
+            <p>للاستفسارات: info@finclick.ai | +966 11 123 4567</p>
+        </footer>
+    </div>
+</body>
+</html>

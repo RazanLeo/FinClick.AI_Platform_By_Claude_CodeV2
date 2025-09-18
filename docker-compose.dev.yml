@@ -1,0 +1,624 @@
+version: '3.8'
+
+services:
+  # Frontend - React.js Development
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: finclick-frontend-dev
+    ports:
+      - "3000:3000"
+      - "3001:3001"  # Hot reload port
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_ENVIRONMENT=development
+      - FAST_REFRESH=true
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - frontend_cache:/app/.cache
+    networks:
+      - development
+    restart: unless-stopped
+
+  # API Gateway Development
+  api-gateway:
+    build:
+      context: ./backend/api-gateway
+      dockerfile: Dockerfile.dev
+    container_name: finclick-api-gateway-dev
+    ports:
+      - "8000:8000"
+      - "9229:9229"  # Node.js debugging port
+    environment:
+      - NODE_ENV=development
+      - DEBUG=finclick:*
+      - DATABASE_URL=postgresql://finclick_dev:dev123@postgres:5432/finclick_dev_db
+      - MONGODB_URL=mongodb://mongo:27017/finclick_dev_mongo
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET_KEY=dev-jwt-secret-key-for-development-only
+      - RATE_LIMIT_MAX=10000
+      - RATE_LIMIT_WINDOW=1
+    volumes:
+      - ./backend/api-gateway:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - mongo
+      - redis
+    networks:
+      - development
+    restart: unless-stopped
+    command: npm run dev
+
+  # Authentication Service Development
+  auth-service:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile.dev
+    container_name: finclick-auth-dev
+    ports:
+      - "3010:3000"
+      - "9230:9229"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=auth:*
+      - DATABASE_URL=postgresql://finclick_dev:dev123@postgres:5432/finclick_dev_db
+      - REDIS_URL=redis://redis:6379/1
+      - JWT_SECRET_KEY=dev-jwt-secret-key-for-development-only
+      - BCRYPT_ROUNDS=4  # Lower for faster development
+    volumes:
+      - ./backend/auth-service:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - development
+    restart: unless-stopped
+    command: npm run dev
+
+  # User Service Development
+  user-service:
+    build:
+      context: ./backend/user-service
+      dockerfile: Dockerfile.dev
+    container_name: finclick-user-dev
+    ports:
+      - "3020:3000"
+      - "9231:9229"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=user:*
+      - DATABASE_URL=postgresql://finclick_dev:dev123@postgres:5432/finclick_dev_db
+      - REDIS_URL=redis://redis:6379/2
+    volumes:
+      - ./backend/user-service:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - development
+    restart: unless-stopped
+    command: npm run dev
+
+  # Analysis Service Development
+  analysis-service:
+    build:
+      context: ./backend/analysis-service
+      dockerfile: Dockerfile.dev
+    container_name: finclick-analysis-dev
+    ports:
+      - "3030:3000"
+      - "9232:9229"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=analysis:*
+      - DATABASE_URL=postgresql://finclick_dev:dev123@postgres:5432/finclick_dev_db
+      - MONGODB_URL=mongodb://mongo:27017/finclick_dev_mongo
+      - REDIS_URL=redis://redis:6379/3
+    volumes:
+      - ./backend/analysis-service:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - mongo
+      - redis
+    networks:
+      - development
+    restart: unless-stopped
+    command: npm run dev
+
+  # File Service Development
+  file-service:
+    build:
+      context: ./backend/file-service
+      dockerfile: Dockerfile.dev
+    container_name: finclick-file-dev
+    ports:
+      - "3040:3000"
+      - "9233:9229"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=file:*
+      - DATABASE_URL=postgresql://finclick_dev:dev123@postgres:5432/finclick_dev_db
+      - AWS_ACCESS_KEY_ID=dev-key
+      - AWS_SECRET_ACCESS_KEY=dev-secret
+      - AWS_S3_BUCKET=finclick-dev-bucket
+      - AWS_REGION=us-east-1
+      - USE_LOCAL_STORAGE=true
+    volumes:
+      - ./backend/file-service:/app
+      - /app/node_modules
+      - dev_file_uploads:/app/uploads
+    depends_on:
+      - postgres
+    networks:
+      - development
+    restart: unless-stopped
+    command: npm run dev
+
+  # Reporting Service Development
+  reporting-service:
+    build:
+      context: ./backend/reporting-service
+      dockerfile: Dockerfile.dev
+    container_name: finclick-reporting-dev
+    ports:
+      - "3050:3000"
+      - "9234:9229"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=reporting:*
+      - MONGODB_URL=mongodb://mongo:27017/finclick_dev_mongo
+      - AWS_ACCESS_KEY_ID=dev-key
+      - AWS_SECRET_ACCESS_KEY=dev-secret
+      - AWS_S3_BUCKET=finclick-dev-reports
+      - USE_LOCAL_STORAGE=true
+    volumes:
+      - ./backend/reporting-service:/app
+      - /app/node_modules
+      - ./reports-templates:/app/templates
+      - dev_report_cache:/app/cache
+    depends_on:
+      - mongo
+    networks:
+      - development
+    restart: unless-stopped
+    command: npm run dev
+
+  # Notification Service Development
+  notification-service:
+    build:
+      context: ./backend/notification-service
+      dockerfile: Dockerfile.dev
+    container_name: finclick-notification-dev
+    ports:
+      - "3060:3000"
+      - "9235:9229"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=notification:*
+      - DATABASE_URL=postgresql://finclick_dev:dev123@postgres:5432/finclick_dev_db
+      - REDIS_URL=redis://redis:6379/4
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - SMTP_USERNAME=""
+      - SMTP_PASSWORD=""
+      - SMTP_SECURE=false
+    volumes:
+      - ./backend/notification-service:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - redis
+      - mailhog
+    networks:
+      - development
+    restart: unless-stopped
+    command: npm run dev
+
+  # Subscription Service Development
+  subscription-service:
+    build:
+      context: ./backend/subscription-service
+      dockerfile: Dockerfile.dev
+    container_name: finclick-subscription-dev
+    ports:
+      - "3070:3000"
+      - "9236:9229"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=subscription:*
+      - DATABASE_URL=postgresql://finclick_dev:dev123@postgres:5432/finclick_dev_db
+      - STRIPE_SECRET_KEY=sk_test_dev_key
+      - STRIPE_WEBHOOK_SECRET=whsec_dev_secret
+      - PAYPAL_CLIENT_ID=dev-paypal-client-id
+      - PAYPAL_CLIENT_SECRET=dev-paypal-client-secret
+      - PAYPAL_MODE=sandbox
+    volumes:
+      - ./backend/subscription-service:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - development
+    restart: unless-stopped
+    command: npm run dev
+
+  # AI Agents Development
+  ai-orchestrator:
+    build:
+      context: ./ai-agents
+      dockerfile: Dockerfile.dev
+    container_name: finclick-ai-dev
+    ports:
+      - "3080:3000"
+      - "9237:9229"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=ai:*
+      - DATABASE_URL=postgresql://finclick_dev:dev123@postgres:5432/finclick_dev_db
+      - MONGODB_URL=mongodb://mongo:27017/finclick_dev_mongo
+      - REDIS_URL=redis://redis:6379/5
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-dev-openai-key}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-dev-gemini-key}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-dev-anthropic-key}
+      - FMP_API_KEY=${FMP_API_KEY:-dev-fmp-key}
+      - AI_RATE_LIMIT=1000
+      - AI_TIMEOUT=60000
+    volumes:
+      - ./ai-agents:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - mongo
+      - redis
+      - rabbitmq
+    networks:
+      - development
+    restart: unless-stopped
+    command: npm run dev
+
+  # Financial Engine Development
+  financial-engine:
+    build:
+      context: ./financial-engine
+      dockerfile: Dockerfile.dev
+    container_name: finclick-financial-dev
+    ports:
+      - "3090:3000"
+      - "9238:9229"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=financial:*
+      - MONGODB_URL=mongodb://mongo:27017/finclick_dev_mongo
+      - REDIS_URL=redis://redis:6379/6
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - FMP_API_KEY=${FMP_API_KEY:-dev-fmp-key}
+      - ALPHA_VANTAGE_API_KEY=${ALPHA_VANTAGE_API_KEY:-dev-av-key}
+      - QUANDL_API_KEY=${QUANDL_API_KEY:-dev-quandl-key}
+    volumes:
+      - ./financial-engine:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+      - redis
+      - rabbitmq
+    networks:
+      - development
+    restart: unless-stopped
+    command: npm run dev
+
+  # Celery Worker Development
+  celery-worker:
+    build:
+      context: ./financial-engine
+      dockerfile: Dockerfile.dev
+    container_name: finclick-celery-dev
+    environment:
+      - NODE_ENV=development
+      - DEBUG=celery:*
+      - MONGODB_URL=mongodb://mongo:27017/finclick_dev_mongo
+      - REDIS_URL=redis://redis:6379/7
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - CELERY_WORKER_HIJACK_ROOT_LOGGER=false
+      - CELERY_WORKER_LOG_COLOR=true
+    volumes:
+      - ./financial-engine:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+      - rabbitmq
+      - mongo
+    networks:
+      - development
+    restart: unless-stopped
+    command: celery -A financial_engine.celery worker --loglevel=debug --concurrency=2
+
+  # Celery Beat Development
+  celery-beat:
+    build:
+      context: ./financial-engine
+      dockerfile: Dockerfile.dev
+    container_name: finclick-beat-dev
+    environment:
+      - NODE_ENV=development
+      - DEBUG=celery-beat:*
+      - MONGODB_URL=mongodb://mongo:27017/finclick_dev_mongo
+      - REDIS_URL=redis://redis:6379/8
+      - CELERY_BEAT_SCHEDULE_FILENAME=/app/celerybeat-schedule
+    volumes:
+      - ./financial-engine:/app
+      - /app/node_modules
+      - dev_celery_data:/app
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      - development
+    restart: unless-stopped
+    command: celery -A financial_engine.celery beat --loglevel=debug
+
+  # PostgreSQL Development Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: finclick-postgres-dev
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=finclick_dev_db
+      - POSTGRES_USER=finclick_dev
+      - POSTGRES_PASSWORD=dev123
+      - POSTGRES_INITDB_ARGS=--auth-host=trust
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./database/sql:/docker-entrypoint-initdb.d
+      - ./database/dev-seed.sql:/docker-entrypoint-initdb.d/99-dev-seed.sql
+    networks:
+      - development
+    restart: unless-stopped
+    command: postgres -c log_statement=all -c log_min_duration_statement=0
+
+  # MongoDB Development Database
+  mongo:
+    image: mongo:6.0
+    container_name: finclick-mongo-dev
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=finclick_dev_mongo
+    volumes:
+      - mongo_dev_data:/data/db
+      - ./database/mongo:/docker-entrypoint-initdb.d
+      - ./database/mongo/dev-seed.js:/docker-entrypoint-initdb.d/99-dev-seed.js
+    networks:
+      - development
+    restart: unless-stopped
+
+  # Redis Development Cache
+  redis:
+    image: redis:7-alpine
+    container_name: finclick-redis-dev
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - development
+    restart: unless-stopped
+
+  # RabbitMQ Development
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: finclick-rabbitmq-dev
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_dev_data:/var/lib/rabbitmq
+    networks:
+      - development
+    restart: unless-stopped
+
+  # Development Email Testing - MailHog
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: finclick-mailhog-dev
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
+    networks:
+      - development
+    restart: unless-stopped
+
+  # Development Monitoring - Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: finclick-prometheus-dev
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.dev.yml:/etc/prometheus/prometheus.yml
+      - prometheus_dev_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=7d'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - development
+    restart: unless-stopped
+
+  # Development Monitoring - Grafana
+  grafana:
+    image: grafana/grafana:latest
+    container_name: finclick-grafana-dev
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=dev123
+      - GF_SECURITY_SECRET_KEY=dev-secret-key
+      - GF_USERS_ALLOW_SIGN_UP=true
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - grafana_dev_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
+    networks:
+      - development
+    restart: unless-stopped
+
+  # Nginx Development Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: finclick-nginx-dev
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - api-gateway
+    networks:
+      - development
+    restart: unless-stopped
+
+  # Development Database Admin - pgAdmin
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: finclick-pgadmin-dev
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@finclick.ai
+      - PGADMIN_DEFAULT_PASSWORD=dev123
+      - PGADMIN_CONFIG_SERVER_MODE=False
+    volumes:
+      - pgadmin_dev_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - development
+    restart: unless-stopped
+
+  # Development MongoDB Admin - mongo-express
+  mongo-express:
+    image: mongo-express:latest
+    container_name: finclick-mongo-express-dev
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=dev123
+    depends_on:
+      - mongo
+    networks:
+      - development
+    restart: unless-stopped
+
+  # Development Redis Admin - redis-commander
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: finclick-redis-commander-dev
+    ports:
+      - "8082:8081"
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+      - HTTP_USER=admin
+      - HTTP_PASSWORD=dev123
+    depends_on:
+      - redis
+    networks:
+      - development
+    restart: unless-stopped
+
+  # Hot Reload Proxy for Frontend
+  webpack-dev-server:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+      target: webpack-dev
+    container_name: finclick-webpack-dev
+    ports:
+      - "3002:3002"
+    environment:
+      - WEBPACK_DEV_SERVER_HOST=0.0.0.0
+      - WEBPACK_DEV_SERVER_PORT=3002
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - development
+    restart: unless-stopped
+    command: npm run start:webpack
+
+volumes:
+  # Development Data
+  postgres_dev_data:
+  mongo_dev_data:
+  redis_dev_data:
+  rabbitmq_dev_data:
+
+  # Development Caches
+  frontend_cache:
+  dev_file_uploads:
+  dev_report_cache:
+  dev_celery_data:
+
+  # Development Monitoring
+  prometheus_dev_data:
+  grafana_dev_data:
+
+  # Development Admin Tools
+  pgadmin_dev_data:
+
+networks:
+  development:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.1.0/24
+
+# Development-specific configurations
+x-dev-variables: &dev-variables
+  TZ: UTC
+  NODE_ENV: development
+  DEBUG: "*"
+
+x-dev-logging: &dev-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+# Override for development
+x-development-overrides:
+  &development-overrides
+  logging: *dev-logging
+  restart: unless-stopped
+
+# Performance settings for development
+x-dev-resources: &dev-resources
+  deploy:
+    resources:
+      limits:
+        memory: 512M
+        cpus: '1.0'

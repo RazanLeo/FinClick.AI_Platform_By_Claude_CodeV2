@@ -1,0 +1,643 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "view": "View",
+    "download": "Download",
+    "upload": "Upload",
+    "next": "Next",
+    "previous": "Previous",
+    "continue": "Continue",
+    "back": "Back",
+    "close": "Close",
+    "submit": "Submit",
+    "reset": "Reset",
+    "clear": "Clear",
+    "select": "Select",
+    "selectAll": "Select All",
+    "none": "None",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or",
+    "and": "and",
+    "of": "of",
+    "to": "to",
+    "from": "from",
+    "in": "in",
+    "at": "at",
+    "by": "by",
+    "with": "with",
+    "without": "without",
+    "for": "for",
+    "as": "as",
+    "about": "about",
+    "more": "More",
+    "less": "Less",
+    "show": "Show",
+    "hide": "Hide",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "percentage": "Percentage",
+    "amount": "Amount",
+    "quantity": "Quantity",
+    "price": "Price",
+    "value": "Value",
+    "name": "Name",
+    "title": "Title",
+    "description": "Description",
+    "details": "Details",
+    "date": "Date",
+    "time": "Time",
+    "status": "Status",
+    "type": "Type",
+    "category": "Category",
+    "code": "Code",
+    "id": "ID",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "country": "Country",
+    "city": "City",
+    "language": "Language",
+    "currency": "Currency",
+    "theme": "Theme",
+    "settings": "Settings",
+    "profile": "Profile",
+    "account": "Account",
+    "dashboard": "Dashboard",
+    "reports": "Reports",
+    "analytics": "Analytics",
+    "export": "Export",
+    "import": "Import",
+    "print": "Print",
+    "share": "Share",
+    "copy": "Copy",
+    "paste": "Paste",
+    "cut": "Cut",
+    "undo": "Undo",
+    "redo": "Redo",
+    "refresh": "Refresh",
+    "reload": "Reload",
+    "sync": "Sync",
+    "backup": "Backup",
+    "restore": "Restore",
+    "help": "Help",
+    "support": "Support",
+    "contact": "Contact",
+    "about": "About",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "legal": "Legal",
+    "copyright": "Copyright",
+    "version": "Version",
+    "beta": "Beta",
+    "new": "New",
+    "updated": "Updated",
+    "featured": "Featured",
+    "popular": "Popular",
+    "recommended": "Recommended",
+    "trending": "Trending",
+    "active": "Active",
+    "inactive": "Inactive",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "public": "Public",
+    "private": "Private",
+    "draft": "Draft",
+    "published": "Published",
+    "archived": "Archived",
+    "deleted": "Deleted",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "completed": "Completed",
+    "failed": "Failed",
+    "cancelled": "Cancelled",
+    "expired": "Expired",
+    "valid": "Valid",
+    "invalid": "Invalid",
+    "required": "Required",
+    "optional": "Optional",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "online": "Online",
+    "offline": "Offline",
+    "free": "Free",
+    "premium": "Premium",
+    "pro": "Pro",
+    "basic": "Basic",
+    "standard": "Standard",
+    "advanced": "Advanced",
+    "enterprise": "Enterprise"
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "analysis": "Analysis",
+    "reports": "Reports",
+    "pricing": "Pricing",
+    "tools": "Tools",
+    "help": "Help",
+    "contact": "Contact Us",
+    "about": "About Us",
+    "login": "Login",
+    "register": "Sign Up",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "messages": "Messages",
+    "search": "Search",
+    "menu": "Menu",
+    "close": "Close",
+    "open": "Open",
+    "toggle": "Toggle",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "previous": "Previous",
+    "next": "Next",
+    "first": "First",
+    "last": "Last",
+    "page": "Page",
+    "goTo": "Go to",
+    "backToTop": "Back to Top"
+  },
+  "branding": {
+    "companyName": "FinClick.AI",
+    "tagline": "Revolutionary Intelligent Financial Analysis Platform",
+    "description": "The first integrated AI platform for financial analysis in the Arab region",
+    "slogan": "Smart Analysis, Right Decisions",
+    "motto": "Transforming financial data into actionable strategic insights"
+  },
+  "hero": {
+    "title": "Revolutionary Intelligent Financial Analysis Platform",
+    "subtitle": "The first integrated AI platform for financial analysis in the Arab region offering 180 comprehensive and advanced financial analysis types",
+    "description": "Discover the power of AI in financial analysis with 23 independent AI agents working in parallel to provide comprehensive analysis of your financial data in less than 30 seconds",
+    "features": [
+      "180 advanced financial analysis types",
+      "23 independent AI agents",
+      "Instant analysis in less than 30 seconds",
+      "Support for 50+ sectors and 150+ activities",
+      "Professional reports with global design",
+      "Benchmark comparisons at 9 geographical levels"
+    ],
+    "cta": {
+      "primary": "Start Free Analysis",
+      "secondary": "Watch Demo",
+      "tryNow": "Try Now",
+      "learnMore": "Learn More",
+      "getStarted": "Get Started",
+      "freeTrial": "Free Trial"
+    }
+  },
+  "features": {
+    "title": "Why FinClick.AI?",
+    "subtitle": "Discover the advantages that make our platform the first choice for financial analysts and investors",
+    "items": {
+      "aiPowered": {
+        "title": "AI-Powered",
+        "description": "23 independent AI agents working in parallel to analyze your financial data with high accuracy and superior speed"
+      },
+      "comprehensive": {
+        "title": "Comprehensive & Advanced Analysis",
+        "description": "180 financial analysis types covering all aspects of financial performance from basic to advanced and sophisticated"
+      },
+      "multiSector": {
+        "title": "Multi-Sector & Multi-Activity",
+        "description": "Support for more than 50 sectors and 150 different activities with accurate benchmark comparisons for each sector"
+      },
+      "instantResults": {
+        "title": "Instant Results",
+        "description": "Get comprehensive and detailed financial analysis in less than 30 seconds with professional reports ready for presentation"
+      },
+      "multilingual": {
+        "title": "Multilingual Support",
+        "description": "Interface and reports in both Arabic and English with full right-to-left direction support"
+      },
+      "secure": {
+        "title": "Secure & Compliant",
+        "description": "High data protection with compliance to global security standards and data protection laws"
+      },
+      "flexible": {
+        "title": "Flexible Usage",
+        "description": "Support for all types of financial files with multi-upload capability and manual input"
+      },
+      "professional": {
+        "title": "Professional Reports",
+        "description": "Reports designed with global standards exportable in multiple formats with interactive charts"
+      }
+    }
+  },
+  "analysisTypes": {
+    "title": "180 Financial Analysis Types",
+    "subtitle": "The most comprehensive collection of financial analyses in the Arab world - from basic to advanced",
+    "description": "Discover the power of comprehensive financial analysis with our integrated collection of sophisticated financial analyses",
+    "categories": {
+      "classical": {
+        "title": "Classical Foundational Analysis",
+        "count": "106",
+        "description": "Basic and traditional financial analyses",
+        "subcategories": {
+          "structural": {
+            "title": "Structural Analysis",
+            "count": "13",
+            "description": "Financial statements structure analysis"
+          },
+          "ratios": {
+            "title": "Financial Ratios",
+            "count": "75",
+            "description": "All traditional financial ratios"
+          },
+          "flow": {
+            "title": "Flow & Movement Analysis",
+            "count": "18",
+            "description": "Cash flow and movement analysis"
+          }
+        }
+      },
+      "intermediate": {
+        "title": "Applied Intermediate Analysis",
+        "count": "21",
+        "description": "Intermediate applied financial analyses",
+        "subcategories": {
+          "comparison": {
+            "title": "Advanced Comparison",
+            "count": "3",
+            "description": "Advanced benchmark comparisons"
+          },
+          "valuation": {
+            "title": "Valuation & Investment",
+            "count": "13",
+            "description": "Valuation and investment analyses"
+          },
+          "performance": {
+            "title": "Performance & Efficiency",
+            "count": "5",
+            "description": "Performance and efficiency analysis"
+          }
+        }
+      },
+      "advanced": {
+        "title": "Advanced & Sophisticated Analysis",
+        "count": "53",
+        "description": "Advanced and sophisticated financial analyses",
+        "subcategories": {
+          "modeling": {
+            "title": "Modeling & Simulation",
+            "count": "11",
+            "description": "Financial models and simulation"
+          },
+          "statistical": {
+            "title": "Statistical Analysis",
+            "count": "16",
+            "description": "Advanced statistical analyses"
+          },
+          "prediction": {
+            "title": "Prediction & Credit",
+            "count": "10",
+            "description": "Prediction and credit analyses"
+          },
+          "risk": {
+            "title": "Quantitative Risk",
+            "count": "25",
+            "description": "Quantitative risk analysis"
+          }
+        }
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "How Does It Work?",
+    "subtitle": "Three simple steps to get comprehensive and professional financial analysis",
+    "steps": {
+      "upload": {
+        "title": "1. Upload Documents",
+        "description": "Upload financial statements or trial balances in any format (PDF, Excel, Word, images)",
+        "features": [
+          "Support for 10 files with unlimited sizes",
+          "OCR technology for scanned documents",
+          "Manual input in ready templates"
+        ]
+      },
+      "options": {
+        "title": "2. Select Analysis Options",
+        "description": "Choose language, sector, activity, comparison type, and required analyses",
+        "features": [
+          "More than 50 sectors and 150 activities",
+          "Comparisons at 9 geographical levels",
+          "Comprehensive analysis or specific analyses"
+        ]
+      },
+      "results": {
+        "title": "3. Get Analysis",
+        "description": "Comprehensive analysis ready in less than 30 seconds with professional reports",
+        "features": [
+          "180 financial analysis types",
+          "PDF, Word, Excel, PPT reports",
+          "Interactive charts"
+        ]
+      }
+    }
+  },
+  "aiAgents": {
+    "title": "AI Agents",
+    "subtitle": "23 independent AI agents working together to provide comprehensive financial analysis",
+    "agents": {
+      "ingestion": {
+        "name": "Ingestion Agent",
+        "description": "Extract data from all types of files"
+      },
+      "structuring": {
+        "name": "Structuring Agent",
+        "description": "Clean and structure data according to IFRS standards"
+      },
+      "benchmark": {
+        "name": "Benchmark Agent",
+        "description": "Collect competitor data and industry averages"
+      },
+      "analysis": {
+        "name": "Analysis Agent",
+        "description": "Execute 180 financial analysis types in parallel"
+      },
+      "narrative": {
+        "name": "Narrative Agent",
+        "description": "Generate explanations and recommendations in two languages"
+      },
+      "compliance": {
+        "name": "Compliance Agent",
+        "description": "Ensure compliance, privacy, and security"
+      }
+    }
+  },
+  "testimonials": {
+    "title": "Customer Reviews",
+    "subtitle": "What our customers say about FinClick.AI",
+    "items": [
+      {
+        "name": "Ahmed Al-Shamri",
+        "position": "CFO, Gulf Investment Company",
+        "content": "FinClick.AI has changed the way we work in financial analysis. What used to take weeks is now done in minutes with high accuracy and comprehensive results.",
+        "rating": 5
+      },
+      {
+        "name": "Fatima Al-Ali",
+        "position": "Financial Analyst, Emirates NBD",
+        "content": "The platform provides advanced analyses we couldn't perform before. The reports are professional and the support is excellent.",
+        "rating": 5
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Subscription Plans",
+    "subtitle": "Choose the plan that suits your needs",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save": "Save",
+    "popular": "Most Popular",
+    "bestValue": "Best Value",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "price": "0",
+        "currency": "$",
+        "period": "month",
+        "description": "For individuals and students",
+        "features": [
+          "3 analyses per month",
+          "Basic analyses (50 types)",
+          "Basic PDF report",
+          "Limited technical support"
+        ],
+        "limitations": [
+          "No benchmark comparisons",
+          "No Excel/Word export",
+          "No advanced charts"
+        ]
+      },
+      "professional": {
+        "name": "Professional",
+        "price": "79",
+        "currency": "$",
+        "period": "month",
+        "description": "For analysts and small businesses",
+        "features": [
+          "50 analyses per month",
+          "All analyses (180 types)",
+          "Multi-format reports",
+          "Benchmark comparisons",
+          "Interactive charts",
+          "24/7 technical support"
+        ]
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Contact us",
+        "currency": "",
+        "period": "",
+        "description": "For large companies and institutions",
+        "features": [
+          "Unlimited analyses",
+          "Full report customization",
+          "API for integration",
+          "Team training",
+          "Dedicated account manager",
+          "Guaranteed SLA"
+        ]
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to FinClick.AI",
+    "quickStart": "Quick Start",
+    "recentAnalyses": "Recent Analyses",
+    "uploadFiles": "Upload Files",
+    "selectOptions": "Analysis Options",
+    "startAnalysis": "Start Analysis",
+    "viewReports": "View Reports",
+    "quickStats": "Quick Stats",
+    "totalAnalyses": "Total Analyses",
+    "thisMonth": "This Month",
+    "successRate": "Success Rate",
+    "avgTime": "Average Time",
+    "sections": {
+      "upload": {
+        "title": "Upload Financial Files",
+        "description": "Upload financial statements, trial balances, or any financial documents",
+        "supportedFormats": "Supported formats: PDF, Excel, Word, Images",
+        "maxFiles": "Up to 10 files",
+        "dragDrop": "Drag and drop files here or click to browse",
+        "selectFiles": "Select Files",
+        "uploadSuccess": "File uploaded successfully",
+        "uploadError": "Error uploading file"
+      },
+      "options": {
+        "title": "Analysis Options",
+        "language": "Report Language",
+        "sector": "Sector",
+        "activity": "Activity",
+        "entity": "Legal Entity Type",
+        "comparison": "Comparison Type",
+        "analysisType": "Analysis Type",
+        "reportFormat": "Report Format"
+      },
+      "analysis": {
+        "title": "Start Analysis",
+        "description": "Start analyzing the uploaded financial data",
+        "button": "Start Analysis",
+        "processing": "Processing...",
+        "completed": "Analysis Completed",
+        "failed": "Analysis Failed",
+        "estimated": "Estimated time: 30 seconds"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Sign in to your FinClick.AI account",
+      "email": "Email",
+      "password": "Password",
+      "remember": "Remember me",
+      "forgot": "Forgot password?",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create new account"
+    },
+    "register": {
+      "title": "Create New Account",
+      "subtitle": "Join FinClick.AI today",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "company": "Company (Optional)",
+      "phone": "Phone Number",
+      "agree": "I agree to",
+      "terms": "Terms and Conditions",
+      "privacy": "Privacy Policy",
+      "submit": "Create Account",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in"
+    },
+    "forgot": {
+      "title": "Reset Password",
+      "subtitle": "Enter your email to reset your password",
+      "email": "Email",
+      "submit": "Send Reset Link",
+      "back": "Back to Sign In",
+      "sent": "Reset link sent to your email"
+    }
+  },
+  "footer": {
+    "company": {
+      "title": "Company",
+      "about": "About Us",
+      "careers": "Careers",
+      "press": "Press",
+      "news": "News",
+      "contact": "Contact Us"
+    },
+    "product": {
+      "title": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "security": "Security",
+      "enterprise": "Enterprise",
+      "api": "API"
+    },
+    "resources": {
+      "title": "Resources",
+      "documentation": "Documentation",
+      "help": "Help",
+      "support": "Support",
+      "status": "Status",
+      "blog": "Blog"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms & Conditions",
+      "cookies": "Cookie Policy",
+      "compliance": "Compliance"
+    },
+    "social": {
+      "title": "Follow Us",
+      "twitter": "Twitter",
+      "linkedin": "LinkedIn",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "youtube": "YouTube"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "email": "info@finclick.ai",
+      "phone": "+966 11 234 5678",
+      "address": "Riyadh, Saudi Arabia"
+    },
+    "newsletter": {
+      "title": "Newsletter",
+      "description": "Subscribe to our newsletter for the latest updates",
+      "placeholder": "Enter your email",
+      "subscribe": "Subscribe",
+      "success": "Successfully subscribed"
+    },
+    "copyright": "© 2024 FinClick.AI. All rights reserved.",
+    "madeWith": "Made with",
+    "in": "in"
+  },
+  "stockTicker": {
+    "title": "Live Stock Indices",
+    "markets": "Markets",
+    "currencies": "Currencies",
+    "commodities": "Commodities"
+  },
+  "errors": {
+    "general": "An unexpected error occurred",
+    "network": "Network connection error",
+    "timeout": "Request timeout",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden",
+    "notFound": "Page not found",
+    "serverError": "Server error",
+    "validation": "Data validation error",
+    "fileUpload": "File upload error",
+    "fileSize": "File size too large",
+    "fileType": "File type not supported",
+    "required": "This field is required",
+    "email": "Invalid email address",
+    "password": "Password too weak",
+    "passwordMatch": "Passwords do not match",
+    "phone": "Invalid phone number"
+  },
+  "success": {
+    "saved": "Successfully saved",
+    "updated": "Successfully updated",
+    "deleted": "Successfully deleted",
+    "uploaded": "Successfully uploaded",
+    "sent": "Successfully sent",
+    "copied": "Successfully copied",
+    "downloaded": "Successfully downloaded",
+    "exported": "Successfully exported",
+    "imported": "Successfully imported",
+    "processed": "Successfully processed",
+    "verified": "Successfully verified",
+    "activated": "Successfully activated",
+    "deactivated": "Successfully deactivated",
+    "subscribed": "Successfully subscribed",
+    "unsubscribed": "Successfully unsubscribed"
+  }
+}

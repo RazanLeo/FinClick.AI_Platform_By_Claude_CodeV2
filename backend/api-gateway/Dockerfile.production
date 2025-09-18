@@ -1,0 +1,130 @@
+# Production Dockerfile for FinClick.AI API Gateway
+# Multi-stage build with security and performance optimizations
+
+# Stage 1: Build Dependencies
+FROM node:18-alpine AS dependencies
+
+# Set working directory
+WORKDIR /app
+
+# Install build dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git \
+    curl \
+    && rm -rf /var/cache/apk/*
+
+# Copy package files
+COPY package*.json ./
+COPY yarn.lock* ./
+
+# Install only production dependencies
+RUN if [ -f yarn.lock ]; then \
+        yarn install --frozen-lockfile --production=true; \
+    else \
+        npm ci --only=production; \
+    fi
+
+# Stage 2: Build Application
+FROM node:18-alpine AS builder
+
+# Set build arguments
+ARG NODE_ENV=production
+ARG BUILD_DATE
+ARG VERSION
+
+WORKDIR /app
+
+# Copy dependencies from previous stage
+COPY --from=dependencies /app/node_modules ./node_modules
+
+# Copy source code
+COPY . .
+
+# Build the application (if TypeScript compilation is needed)
+RUN if [ -f "tsconfig.json" ]; then \
+        npm run build; \
+    fi
+
+# Stage 3: Production Runtime
+FROM node:18-alpine AS production
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=1024"
+ENV TZ=UTC
+
+# Install runtime dependencies and security updates
+RUN apk update && apk upgrade && \
+    apk add --no-cache \
+    curl \
+    ca-certificates \
+    tzdata \
+    dumb-init \
+    tini \
+    && rm -rf /var/cache/apk/* \
+    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone
+
+# Create non-root user for security
+RUN addgroup -g 1001 -S appuser && \
+    adduser -S -D -H -u 1001 -h /app -s /sbin/nologin -G appuser -g appuser appuser
+
+# Set working directory
+WORKDIR /app
+
+# Copy built application and dependencies
+COPY --from=builder --chown=appuser:appuser /app/node_modules ./node_modules
+COPY --from=builder --chown=appuser:appuser /app/dist ./dist 2>/dev/null || \
+COPY --from=builder --chown=appuser:appuser /app/src ./src
+COPY --from=builder --chown=appuser:appuser /app/package*.json ./
+COPY --from=builder --chown=appuser:appuser /app/*.js ./
+
+# Copy configuration files
+COPY --chown=appuser:appuser config/ ./config/
+COPY --chown=appuser:appuser public/ ./public/ 2>/dev/null || true
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/tmp /app/uploads && \
+    chown -R appuser:appuser /app && \
+    chmod -R 755 /app
+
+# Create health check script
+RUN echo '#!/bin/sh' > /usr/local/bin/health-check.sh && \
+    echo 'curl -f http://localhost:8000/health || exit 1' >> /usr/local/bin/health-check.sh && \
+    chmod +x /usr/local/bin/health-check.sh
+
+# Security: Remove unnecessary files
+RUN find /app -name "*.md" -type f -delete && \
+    find /app -name "*.txt" -type f -delete && \
+    find /app -name ".git*" -type f -delete && \
+    find /app -name "Dockerfile*" -type f -delete
+
+# Expose port
+EXPOSE 8000
+
+# Add labels for better container management
+LABEL maintainer="FinClick.AI Team" \
+      version="1.0.0" \
+      description="FinClick.AI API Gateway Production Image" \
+      org.opencontainers.image.title="FinClick.AI API Gateway" \
+      org.opencontainers.image.description="Production-ready API Gateway for FinClick.AI" \
+      org.opencontainers.image.vendor="FinClick.AI" \
+      org.opencontainers.image.version="1.0.0" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.source="https://github.com/finclick/api-gateway"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD /usr/local/bin/health-check.sh
+
+# Switch to non-root user
+USER appuser
+
+# Use tini as init system for proper signal handling
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start the application
+CMD ["node", "server.js"]

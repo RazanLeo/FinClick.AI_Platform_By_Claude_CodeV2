@@ -1,0 +1,809 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+           xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+           xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
+
+  <!-- Document Properties -->
+  <w:body>
+
+    <!-- Header Section -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Title"/>
+        <w:jc w:val="center"/>
+        <w:spacing w:after="240"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="1E40AF"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>تقرير التحليل المالي التفصيلي</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="64748B"/>
+          <w:sz w:val="16"/>
+        </w:rPr>
+        <w:t>منصة FinClick.AI للتحليل المالي الذكي</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+        <w:spacing w:after="360"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="64748B"/>
+          <w:sz w:val="14"/>
+        </w:rPr>
+        <w:t>تاريخ التقرير: {{REPORT_DATE}} | الفترة: {{ANALYSIS_PERIOD}} | الشركة: {{COMPANY_NAME}}</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Executive Summary -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+        <w:spacing w:before="240" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="1E40AF"/>
+          <w:sz w:val="24"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>الملخص التنفيذي</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+        <w:ind w:right="720"/>
+        <w:shd w:val="clear" w:color="auto" w:fill="F8FAFC"/>
+      </w:pPr>
+      <w:r>
+        <w:t>يهدف هذا التقرير إلى تقديم تحليل مالي شامل ومفصل لأداء {{COMPANY_NAME}} خلال الفترة {{ANALYSIS_PERIOD}}. يتضمن التحليل دراسة معمقة للقوائم المالية، تحليل النسب المالية، تقييم الأداء التشغيلي، ومقارنة الأداء مع معايير القطاع.</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Key Financial Highlights -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading2"/>
+        <w:spacing w:before="240" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="1E40AF"/>
+          <w:sz w:val="20"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>المؤشرات المالية الرئيسية</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Financial Metrics Table -->
+    <w:tbl>
+      <w:tblPr>
+        <w:tblStyle w:val="TableGrid"/>
+        <w:tblW w:w="0" w:type="auto"/>
+        <w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/>
+      </w:tblPr>
+      <w:tblGrid>
+        <w:gridCol w:w="2000"/>
+        <w:gridCol w:w="1500"/>
+        <w:gridCol w:w="1500"/>
+        <w:gridCol w:w="1200"/>
+      </w:tblGrid>
+
+      <!-- Table Header -->
+      <w:tr>
+        <w:trPr>
+          <w:tblHeader/>
+        </w:trPr>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="1E40AF"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="FFFFFF"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>المؤشر المالي</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="1E40AF"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="FFFFFF"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{CURRENT_YEAR}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="1E40AF"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="FFFFFF"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{PREVIOUS_YEAR}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="1E40AF"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="FFFFFF"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>التغيير (%)</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+
+      <!-- Table Rows -->
+      <w:tr>
+        <w:tc>
+          <w:p>
+            <w:r>
+              <w:t>إجمالي الإيرادات</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="1E40AF"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{TOTAL_REVENUE_CURRENT}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>{{TOTAL_REVENUE_PREVIOUS}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="16A34A"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>+{{REVENUE_CHANGE}}%</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+
+      <w:tr>
+        <w:tc>
+          <w:p>
+            <w:r>
+              <w:t>صافي الربح</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="1E40AF"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{NET_PROFIT_CURRENT}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>{{NET_PROFIT_PREVIOUS}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="16A34A"/>
+                <w:b/>
+              </w:rPr>
+              <w:t>+{{PROFIT_CHANGE}}%</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+    </w:tbl>
+
+    <!-- Page Break -->
+    <w:p>
+      <w:r>
+        <w:br w:type="page"/>
+      </w:r>
+    </w:p>
+
+    <!-- Income Statement Analysis -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+        <w:spacing w:before="240" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="1E40AF"/>
+          <w:sz w:val="24"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>تحليل قائمة الدخل</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading3"/>
+        <w:spacing w:before="120" w:after="80"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="1E40AF"/>
+          <w:sz w:val="16"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>تحليل الإيرادات</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:t>شهدت إيرادات الشركة نمواً إيجابياً بنسبة {{REVENUE_GROWTH}}% خلال الفترة المحللة. يُعزى هذا النمو إلى عدة عوامل رئيسية:</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="1"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>زيادة في حجم المبيعات بنسبة {{SALES_VOLUME_INCREASE}}%</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="1"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>تحسن في الأسعار البيعية بمتوسط {{PRICE_IMPROVEMENT}}%</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="1"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>دخول أسواق جديدة ساهم بـ {{NEW_MARKETS_CONTRIBUTION}}% من النمو</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="1"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>إطلاق منتجات جديدة أضافت {{NEW_PRODUCTS_CONTRIBUTION}}% للإيرادات</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Profitability Analysis -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading3"/>
+        <w:spacing w:before="240" w:after="80"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="1E40AF"/>
+          <w:sz w:val="16"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>تحليل الربحية</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:t>تُظهر مؤشرات الربحية تحسناً ملحوظاً عبر جميع المستويات:</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Profitability Metrics Table -->
+    <w:tbl>
+      <w:tblPr>
+        <w:tblStyle w:val="TableGrid"/>
+        <w:tblW w:w="0" w:type="auto"/>
+      </w:tblPr>
+      <w:tblGrid>
+        <w:gridCol w:w="2500"/>
+        <w:gridCol w:w="1500"/>
+        <w:gridCol w:w="1500"/>
+        <w:gridCol w:w="1000"/>
+      </w:tblGrid>
+
+      <w:tr>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="F1F5F9"/>
+          </w:tcPr>
+          <w:p>
+            <w:r>
+              <w:rPr>
+                <w:b/>
+              </w:rPr>
+              <w:t>مؤشر الربحية</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="F1F5F9"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{CURRENT_YEAR}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="F1F5F9"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:b/>
+              </w:rPr>
+              <w:t>{{PREVIOUS_YEAR}}</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="F1F5F9"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:b/>
+              </w:rPr>
+              <w:t>التغيير</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+
+      <w:tr>
+        <w:tc>
+          <w:p>
+            <w:r>
+              <w:t>هامش الربح الإجمالي</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>{{GROSS_MARGIN_CURRENT}}%</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>{{GROSS_MARGIN_PREVIOUS}}%</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="16A34A"/>
+              </w:rPr>
+              <w:t>+{{GROSS_MARGIN_CHANGE}}%</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+
+      <w:tr>
+        <w:tc>
+          <w:p>
+            <w:r>
+              <w:t>هامش الربح التشغيلي</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>{{OPERATING_MARGIN_CURRENT}}%</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>{{OPERATING_MARGIN_PREVIOUS}}%</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="16A34A"/>
+              </w:rPr>
+              <w:t>+{{OPERATING_MARGIN_CHANGE}}%</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+
+      <w:tr>
+        <w:tc>
+          <w:p>
+            <w:r>
+              <w:t>هامش الربح الصافي</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>{{NET_MARGIN_CURRENT}}%</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:t>{{NET_MARGIN_PREVIOUS}}%</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:p>
+            <w:pPr>
+              <w:jc w:val="center"/>
+            </w:pPr>
+            <w:r>
+              <w:rPr>
+                <w:color w:val="16A34A"/>
+              </w:rPr>
+              <w:t>+{{NET_MARGIN_CHANGE}}%</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+    </w:tbl>
+
+    <!-- Financial Ratios Analysis -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+        <w:spacing w:before="480" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="1E40AF"/>
+          <w:sz w:val="24"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>تحليل النسب المالية</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Liquidity Ratios -->
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading2"/>
+        <w:spacing w:before="240" w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="1E40AF"/>
+          <w:sz w:val="20"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>نسب السيولة</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:spacing w:after="120"/>
+      </w:pPr>
+      <w:r>
+        <w:t>تُظهر نسب السيولة قدرة الشركة على الوفاء بالتزاماتها قصيرة الأجل:</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="2"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>نسبة السيولة الجارية: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{CURRENT_RATIO}} (مقابل {{CURRENT_RATIO_PREVIOUS}} العام السابق)</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:ind w:right="720"/>
+      </w:pPr>
+      <w:r>
+        <w:t>تُعتبر هذه النسبة {{CURRENT_RATIO_ASSESSMENT}} مما يشير إلى {{CURRENT_RATIO_INTERPRETATION}}</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="2"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>نسبة السيولة السريعة: </w:t>
+      </w:r>
+      <w:r>
+        <w:t>{{QUICK_RATIO}} (مقابل {{QUICK_RATIO_PREVIOUS}} العام السابق)</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:ind w:right="720"/>
+      </w:pPr>
+      <w:r>
+        <w:t>تُظهر هذه النسبة {{QUICK_RATIO_ASSESSMENT}} في قدرة الشركة على الوفاء بالالتزامات الفورية</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Key Insights Box -->
+    <w:p>
+      <w:pPr>
+        <w:spacing w:before="240" w:after="120"/>
+        <w:shd w:val="clear" w:color="auto" w:fill="FFFBEB"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="F59E0B"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="F59E0B"/>
+          <w:b/>
+        </w:rPr>
+        <w:t>نتائج رئيسية:</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:shd w:val="clear" w:color="auto" w:fill="FFFBEB"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="F59E0B"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="3"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>الأداء المالي يُظهر تحسناً مستمراً عبر جميع المؤشرات الرئيسية</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:shd w:val="clear" w:color="auto" w:fill="FFFBEB"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="F59E0B"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="3"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>السيولة المالية في مستويات صحية تدعم العمليات التشغيلية</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:shd w:val="clear" w:color="auto" w:fill="FFFBEB"/>
+        <w:pBdr>
+          <w:right w:val="single" w:sz="12" w:color="F59E0B"/>
+        </w:pBdr>
+        <w:ind w:right="360"/>
+        <w:numPr>
+          <w:ilvl w:val="0"/>
+          <w:numId w:val="3"/>
+        </w:numPr>
+      </w:pPr>
+      <w:r>
+        <w:t>هوامش الربح تفوق متوسط القطاع بنسبة {{MARGIN_OUTPERFORMANCE}}%</w:t>
+      </w:r>
+    </w:p>
+
+    <!-- Footer -->
+    <w:p>
+      <w:pPr>
+        <w:spacing w:before="480"/>
+        <w:jc w:val="center"/>
+        <w:pBdr>
+          <w:top w:val="single" w:sz="4" w:color="E5E7EB"/>
+        </w:pBdr>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="64748B"/>
+          <w:sz w:val="16"/>
+        </w:rPr>
+        <w:t>تم إنشاء هذا التقرير بواسطة FinClick.AI | منصة التحليل المالي الذكي</w:t>
+      </w:r>
+    </w:p>
+
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:color w:val="64748B"/>
+          <w:sz w:val="14"/>
+        </w:rPr>
+        <w:t>للاستفسارات: analysis@finclick.ai | +966 11 123 4567</w:t>
+      </w:r>
+    </w:p>
+
+  </w:body>
+</w:document>

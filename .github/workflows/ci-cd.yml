@@ -1,0 +1,516 @@
+# FinClick.AI CI/CD Pipeline
+# Comprehensive workflow for testing, building, and deploying the application
+
+name: FinClick.AI CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, staging ]
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+      force_deploy:
+        description: 'Force deployment without approval'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: finclick
+
+# Security: Use minimal permissions
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+  actions: read
+
+jobs:
+  # Code Quality and Security Checks
+  code-quality:
+    name: Code Quality & Security
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci --only=production
+          cd frontend && npm ci
+          cd ../backend/api-gateway && npm ci
+
+      - name: ESLint Analysis
+        run: |
+          npm run lint:frontend
+          npm run lint:backend
+
+      - name: Prettier Code Format Check
+        run: npm run format:check
+
+      - name: TypeScript Type Check
+        run: |
+          cd frontend && npm run type-check
+          cd ../backend/api-gateway && npm run type-check
+
+      - name: Security Audit
+        run: |
+          npm audit --audit-level high
+          cd frontend && npm audit --audit-level high
+
+      - name: SAST with CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: 'javascript,typescript'
+
+      - name: CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+      - name: Dependency Vulnerability Scan
+        uses: actions/dependency-review-action@v3
+
+      - name: Secret Scanning
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+
+  # Unit and Integration Tests
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: code-quality
+
+    strategy:
+      matrix:
+        test-type: [unit, integration, e2e]
+        node-version: [18, 20]
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: finclick_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test123
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+      mongodb:
+        image: mongo:6.0
+        env:
+          MONGO_INITDB_ROOT_USERNAME: test
+          MONGO_INITDB_ROOT_PASSWORD: test123
+        options: >-
+          --health-cmd "mongo --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd frontend && npm ci
+          cd ../backend/api-gateway && npm ci
+
+      - name: Setup test environment
+        run: |
+          cp .env.test.example .env.test
+          npm run db:setup:test
+
+      - name: Run ${{ matrix.test-type }} tests
+        run: |
+          case "${{ matrix.test-type }}" in
+            unit)
+              npm run test:unit -- --coverage
+              ;;
+            integration)
+              npm run test:integration
+              ;;
+            e2e)
+              npm run test:e2e
+              ;;
+          esac
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://test:test123@localhost:5432/finclick_test
+          REDIS_URL: redis://localhost:6379
+          MONGODB_URL: mongodb://test:test123@localhost:27017/finclick_test
+
+      - name: Upload test coverage
+        if: matrix.test-type == 'unit'
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: ${{ matrix.test-type }}
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.test-type }}-node${{ matrix.node-version }}
+          path: |
+            test-results/
+            coverage/
+
+  # Build and Push Docker Images
+  build:
+    name: Build & Push Images
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: tests
+    if: github.event_name != 'pull_request'
+
+    strategy:
+      matrix:
+        service:
+          - frontend
+          - api-gateway
+          - auth-service
+          - user-service
+          - analysis-service
+          - file-service
+          - reporting-service
+          - notification-service
+          - subscription-service
+          - ai-orchestrator
+          - financial-engine
+
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+      image-digest: ${{ steps.build.outputs.digest }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.service }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: ./${{ matrix.service == 'frontend' && 'frontend' || 'backend/' }}${{ matrix.service != 'frontend' && matrix.service || '' }}
+          file: ./${{ matrix.service == 'frontend' && 'frontend' || 'backend/' }}${{ matrix.service != 'frontend' && matrix.service || '' }}/Dockerfile.production
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            VERSION=${{ steps.meta.outputs.version }}
+            GIT_COMMIT=${{ github.sha }}
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ steps.meta.outputs.tags }}
+          format: spdx-json
+          output-file: sbom-${{ matrix.service }}.spdx.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ matrix.service }}
+          path: sbom-${{ matrix.service }}.spdx.json
+
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.meta.outputs.tags }}
+          format: 'sarif'
+          output: 'trivy-${{ matrix.service }}.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-${{ matrix.service }}.sarif'
+
+  # Deploy to Staging
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: build
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    environment:
+      name: staging
+      url: https://staging.finclick.ai
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup deployment tools
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+      - name: Configure staging environment
+        run: |
+          echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ needs.build.outputs.image-tag }}" >> $GITHUB_ENV
+
+      - name: Deploy to staging
+        run: |
+          # Update docker-compose with new image tags
+          envsubst < docker-compose.staging.yml.template > docker-compose.staging.yml
+
+          # Deploy using deployment script
+          chmod +x scripts/deployment/deploy.sh
+          ./scripts/deployment/deploy.sh \
+            --environment staging \
+            --force \
+            --migrate \
+            --health-check
+
+      - name: Run staging tests
+        run: |
+          sleep 60  # Wait for services to start
+          npm run test:staging
+
+      - name: Notify deployment status
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  # Security Scanning
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Checkov (IaC Security)
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
+          framework: dockerfile,docker_compose
+          output_format: sarif
+          output_file_path: checkov.sarif
+
+      - name: Upload Checkov results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: checkov.sarif
+
+      - name: Container Security Scan
+        run: |
+          # Scan all built images
+          for service in frontend api-gateway auth-service; do
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+              aquasec/trivy image --severity HIGH,CRITICAL \
+              ${{ env.REGISTRY }}/${{ github.repository }}/${service}:${{ github.sha }}
+          done
+
+  # Performance Testing
+  performance-test:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: deploy-staging
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup K6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg \
+            --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | \
+            sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Run performance tests
+        run: |
+          k6 run tests/performance/load-test.js \
+            --env BASE_URL=https://staging.finclick.ai \
+            --env VUS=10 \
+            --env DURATION=5m
+
+      - name: Upload performance results
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-results
+          path: performance-results/
+
+  # Deploy to Production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: [build, security-scan, performance-test]
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    environment:
+      name: production
+      url: https://finclick.ai
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Manual approval for production
+        if: github.event.inputs.force_deploy != 'true'
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: finclick-admins
+          minimum-approvals: 2
+          timeout-minutes: 60
+
+      - name: Create pre-deployment backup
+        run: |
+          chmod +x scripts/backup/backup.sh
+          ./scripts/backup/backup.sh \
+            --environment production \
+            --type full \
+            --compress \
+            --s3-upload
+
+      - name: Blue-Green Deployment
+        run: |
+          # Implement blue-green deployment strategy
+          chmod +x scripts/deployment/blue-green-deploy.sh
+          ./scripts/deployment/blue-green-deploy.sh \
+            --environment production \
+            --image-tag ${{ needs.build.outputs.image-tag }} \
+            --health-check-timeout 300
+
+      - name: Post-deployment verification
+        run: |
+          # Run production smoke tests
+          npm run test:smoke:production
+
+          # Verify deployment health
+          scripts/monitoring/health-check.sh --environment production
+
+      - name: Update monitoring dashboards
+        run: |
+          # Update Grafana dashboards with new deployment info
+          curl -X POST "${{ secrets.GRAFANA_API_URL }}/api/annotations" \
+            -H "Authorization: Bearer ${{ secrets.GRAFANA_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "text": "Production deployment: ${{ github.sha }}",
+              "tags": ["deployment", "production"],
+              "time": '$(date +%s000)'
+            }'
+
+      - name: Notify successful deployment
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author,ref,workflow
+
+  # Cleanup
+  cleanup:
+    name: Cleanup
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [deploy-staging, deploy-production]
+    if: always()
+
+    steps:
+      - name: Cleanup old images
+        run: |
+          # Keep only last 10 images per service
+          echo "Cleaning up old container images..."
+          # This would typically involve calling your registry cleanup script
+
+      - name: Cleanup test artifacts
+        run: |
+          # Cleanup any test databases or resources
+          echo "Cleaning up test resources..."
+
+# Workflow security hardening
+env:
+  # Prevent code injection
+  DOCKER_CONTENT_TRUST: 1
+  # Enable BuildKit for better security
+  DOCKER_BUILDKIT: 1

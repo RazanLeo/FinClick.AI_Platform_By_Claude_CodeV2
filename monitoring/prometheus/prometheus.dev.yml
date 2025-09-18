@@ -1,0 +1,105 @@
+# Prometheus Configuration for FinClick.AI Development
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+  scrape_timeout: 10s
+  external_labels:
+    cluster: 'finclick-development'
+    environment: 'development'
+
+# Scrape configurations for development
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 30s
+
+  # API Gateway (single instance in dev)
+  - job_name: 'api-gateway'
+    static_configs:
+      - targets: ['api-gateway:8000']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  # All other services (single instances)
+  - job_name: 'auth-service'
+    static_configs:
+      - targets: ['auth-service:3010']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  - job_name: 'user-service'
+    static_configs:
+      - targets: ['user-service:3020']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  - job_name: 'analysis-service'
+    static_configs:
+      - targets: ['analysis-service:3030']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  - job_name: 'file-service'
+    static_configs:
+      - targets: ['file-service:3040']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  - job_name: 'reporting-service'
+    static_configs:
+      - targets: ['reporting-service:3050']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  - job_name: 'notification-service'
+    static_configs:
+      - targets: ['notification-service:3060']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  - job_name: 'subscription-service'
+    static_configs:
+      - targets: ['subscription-service:3070']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  - job_name: 'ai-orchestrator'
+    static_configs:
+      - targets: ['ai-orchestrator:3080']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  - job_name: 'financial-engine'
+    static_configs:
+      - targets: ['financial-engine:3090']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  # Development databases
+  - job_name: 'postgres-dev'
+    static_configs:
+      - targets: ['postgres:5432']
+    scrape_interval: 60s
+
+  - job_name: 'mongodb-dev'
+    static_configs:
+      - targets: ['mongo:27017']
+    scrape_interval: 60s
+
+  - job_name: 'redis-dev'
+    static_configs:
+      - targets: ['redis:6379']
+    scrape_interval: 60s
+
+  - job_name: 'rabbitmq-dev'
+    static_configs:
+      - targets: ['rabbitmq:15672']
+    scrape_interval: 60s
+
+# Development storage (shorter retention)
+storage:
+  tsdb:
+    retention.time: 7d
+    retention.size: 1GB
