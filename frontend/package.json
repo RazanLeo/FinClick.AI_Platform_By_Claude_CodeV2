@@ -79,7 +79,8 @@
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "format": "prettier --write src/**/*.{ts,tsx}",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "vercel-build": "npm run build"
   },
   "eslintConfig": {
     "extends": [
